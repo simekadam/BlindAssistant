@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+    
+    <!-- <com.simekadam.blindassistant.BlindGridView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/blindGridView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:numColumns="2"
+        android:padding="0px"
+        android:layout_margin="0px"
+        android:clipToPadding="true"
+        android:listSelector="@null"
+        android:focusable="true"
+android:focusableInTouchMode="true"
+         >
+        
+
+    </com.simekadam.blindassistant.BlindGridView> -->
+    
+    <com.simekadam.blindassistant.ui.BlindTableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/blindTableLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:padding="0px"
+        android:focusable="true"
+        android:orientation="vertical"
+        
+        android:background="@android:color/white"
+        >
+        <LinearLayout  android:orientation="horizontal" android:id="@+id/tableRow1" android:layout_weight="1" android:layout_width="fill_parent" android:layout_height="50dip">
+            <com.simekadam.blindassistant.ui.BlindButton android:id="@+id/firstButton" android:layout_margin="0dip" android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="1"> </com.simekadam.blindassistant.ui.BlindButton>
+            <com.simekadam.blindassistant.ui.BlindButton android:id="@+id/secondButton" android:layout_margin="0dip" android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="1"/>
+        </LinearLayout>
+        <LinearLayout  android:orientation="horizontal" android:layout_weight="1"  android:layout_width="fill_parent" android:layout_height="50dip">
+            <com.simekadam.blindassistant.ui.BlindButton android:id="@+id/thirdButton" android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="1"/>
+            <com.simekadam.blindassistant.ui.BlindButton android:id="@+id/fourthButton" android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="1"/>
+        </LinearLayout>
+        <LinearLayout  android:orientation="horizontal" android:layout_weight="1" android:layout_width="fill_parent" android:layout_height="50dip">
+            <com.simekadam.blindassistant.ui.BlindButton android:id="@+id/fifthButton" android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="1"/>
+            <com.simekadam.blindassistant.ui.BlindButton android:id="@+id/sixthButton" android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="1"/>
+        </LinearLayout>
+        
+    </com.simekadam.blindassistant.ui.BlindTableLayout>
