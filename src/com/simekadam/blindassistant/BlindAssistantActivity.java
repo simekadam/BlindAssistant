@@ -1,30 +1,14 @@
 package com.simekadam.blindassistant;
 
-import com.simekadam.blindassistant.SpeechHelper.OnSpeechEndedListener;
-import com.simekadam.blindassistant.ui.BlindAdapter;
-import com.simekadam.blindassistant.ui.BlindButton;
-import com.simekadam.blindassistant.ui.BlindButton.OnDoubleClickListener;
-import com.simekadam.blindassistant.ui.BlindTableLayout;
-
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
-import android.net.Uri;
-import android.opengl.Visibility;
 import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
-import android.speech.tts.TextToSpeech.OnInitListener;
-import android.speech.tts.TextToSpeech.OnUtteranceCompletedListener;
-import android.telephony.TelephonyManager;
-import android.util.Log;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TableRow;
+
+import com.simekadam.blindassistant.ui.BlindButton;
+import com.simekadam.blindassistant.ui.BlindButton.OnDoubleClickListener;
 
 public class BlindAssistantActivity extends Activity{
 	

@@ -45,7 +45,6 @@ public class BlindTableLayout extends LinearLayout implements OnTouchListener, O
 				int row = (int)Math.floor(index/2);
 				LinearLayout lin = (LinearLayout) getChildAt(row);
 				BlindButton btn = (BlindButton ) lin.getChildAt(index-row*2);
-				// TODO Auto-generated method stub
 				SpeechHelper.getInstance().say(btn.getSpeechLabel(), getContext(), SpeechHelper.UI_RESPONSE);
 			}
 		});

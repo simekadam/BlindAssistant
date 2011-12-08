@@ -133,23 +133,8 @@ public class BlindButton extends Button implements OnClickListener, OnTouchListe
 	public void onClick(View view) {
     	
     	BlindButton clicked = (BlindButton) view;
-    	if(prevClicked == null){
-
-    		this.say(clicked.getSpeechLabel(), SpeechHelper.UI_RESPONSE);  
-
-    		BlindButton.prevClicked = clicked;
-    	}
-    	else if(!prevClicked.equals(clicked)){
-    		if(clicked.getSpeechLabel() != null){
-    			this.say(clicked.getSpeechLabel(), SpeechHelper.UI_RESPONSE);
-    		}
-    		else{
-    			this.say("žádná akce", SpeechHelper.UI_RESPONSE);
-    		}
-    		BlindButton.prevClicked = clicked;
-    	}
-    	else{
-    		
+    	
+    	if(prevClicked != null){
     		prevClicked = null;
     		if(clicked.getActionSpeechLabel() != null){
     			this.say(clicked.getActionSpeechLabel(), SpeechHelper.UI_RESPONSE_WITH_CALLBACK);
@@ -158,6 +143,9 @@ public class BlindButton extends Button implements OnClickListener, OnTouchListe
     		}
     		
     		}
+    	else{
+    		BlindButton.prevClicked = clicked;
+    	}
     		
     	
     	
@@ -203,15 +191,7 @@ public class BlindButton extends Button implements OnClickListener, OnTouchListe
 	@Override
 	public boolean onTouchEvent( MotionEvent event) {
 		// TODO Auto-generated method stub
-		if(event.getAction() == MotionEvent.ACTION_DOWN){
-			vibrator.vibrate(20);
-			}
-		else if(event.getAction() == MotionEvent.ACTION_UP){
-			currentlyTouched = -1;
-		}
-		else{
-			checkEdges(event.getRawX(), event.getRawY());
-		}
+		
 		
 		return super.onTouchEvent(event);
 		
@@ -223,7 +203,28 @@ public class BlindButton extends Button implements OnClickListener, OnTouchListe
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
 		// TODO Auto-generated method stub
+		if(event.getAction() == MotionEvent.ACTION_DOWN){
+			vibrator.vibrate(20);
+		BlindButton clicked = (BlindButton) v;
 		
+		if(prevClicked == null){
+			Log.v("tst","test");
+    		if(clicked.getSpeechLabel() != null){
+    			this.say(clicked.getSpeechLabel(), SpeechHelper.UI_RESPONSE);
+    		}
+    		else{
+    			this.say("žádná akce", SpeechHelper.UI_RESPONSE);
+    		}
+    		
+    	}
+    	
+			}
+		else if(event.getAction() == MotionEvent.ACTION_UP){
+			currentlyTouched = -1;
+		}
+		else{
+			checkEdges(event.getRawX(), event.getRawY());
+		}
 		return false;
 	}
 
