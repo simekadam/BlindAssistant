@@ -22,6 +22,7 @@ import android.view.View.OnTouchListener;
 import android.view.Display;;
 public class BlindButton extends Button implements OnClickListener, OnTouchListener{
     private static BlindButton prevClicked = null;
+    private static boolean allowed = false;
     private Intent intent;
     private String speechLabel;
     private String actionSpeechLabel;
@@ -31,7 +32,7 @@ public class BlindButton extends Button implements OnClickListener, OnTouchListe
 	static Display display;
 	private OnDoubleClickListener onDoubleClickListener;
 	private static OnHoverListener onHoverListener;
-
+	
 	
 
 
@@ -134,7 +135,7 @@ public class BlindButton extends Button implements OnClickListener, OnTouchListe
     	
     	BlindButton clicked = (BlindButton) view;
     	
-    	if(prevClicked != null){
+    	if(prevClicked != null && prevClicked.equals(clicked) && allowed == true){
     		prevClicked = null;
     		if(clicked.getActionSpeechLabel() != null){
     			this.say(clicked.getActionSpeechLabel(), SpeechHelper.UI_RESPONSE_WITH_CALLBACK);
@@ -144,6 +145,7 @@ public class BlindButton extends Button implements OnClickListener, OnTouchListe
     		
     		}
     	else{
+    		allowed = true;
     		BlindButton.prevClicked = clicked;
     	}
     		
@@ -203,12 +205,14 @@ public class BlindButton extends Button implements OnClickListener, OnTouchListe
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
 		// TODO Auto-generated method stub
+		BlindButton clicked = (BlindButton) v;
 		if(event.getAction() == MotionEvent.ACTION_DOWN){
 			vibrator.vibrate(20);
-		BlindButton clicked = (BlindButton) v;
 		
-		if(prevClicked == null){
+			
+		if(prevClicked == null || !prevClicked.equals(clicked)){
 			Log.v("tst","test");
+			BlindButton.allowed = false;
     		if(clicked.getSpeechLabel() != null){
     			this.say(clicked.getSpeechLabel(), SpeechHelper.UI_RESPONSE);
     		}
@@ -221,6 +225,9 @@ public class BlindButton extends Button implements OnClickListener, OnTouchListe
 			}
 		else if(event.getAction() == MotionEvent.ACTION_UP){
 			currentlyTouched = -1;
+			BlindButton.prevClicked = clicked;
+			
+			return false;
 		}
 		else{
 			checkEdges(event.getRawX(), event.getRawY());

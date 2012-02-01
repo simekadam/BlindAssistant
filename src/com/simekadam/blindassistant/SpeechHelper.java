@@ -4,6 +4,7 @@ package com.simekadam.blindassistant;
 import java.util.HashMap;
 
 import android.content.Context;
+import android.sax.StartElementListener;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 import android.speech.tts.TextToSpeech.OnUtteranceCompletedListener;
@@ -39,6 +40,7 @@ public class SpeechHelper implements OnInitListener, OnUtteranceCompletedListene
 		
 		if(mTts == null){
 			this.text = text;
+			
 			mTts = new TextToSpeech(context, (OnInitListener) helper);
 					
 		}

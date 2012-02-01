@@ -3,5 +3,9 @@
 
     <string name="hello">Hello World, BlindGuardianActivity!</string>
     <string name="app_name">BlindGuardian</string>
+    <string name="StartUpdaterService">Start Updater Service</string>
+    <string name="userContext">User Context</string>
+    <string name="BlindAssistant">Blind Assistant</string>
+    <string name="toggleUpdaterService">Updater Service</string>
 
 </resources>

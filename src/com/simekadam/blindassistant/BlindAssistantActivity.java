@@ -72,6 +72,19 @@ public class BlindAssistantActivity extends Activity{
 			}
 		});
         
+        BlindButton btn4 = (BlindButton) findViewById(R.id.fourthButton);
+        btn4.setSpeechLabel("vlízt do vývojové verze");
+        btn4.setText("vlízt do sekce pro mě");
+        btn4.setActionSpeechLabel("dál to neni pro slepouny");
+        btn4.setOnDoubleClickListener(new OnDoubleClickListener() {
+			
+			@Override
+			public void onDoubleClick() {
+				// TODO Auto-generated method stub
+				startActivity(new Intent(getApplicationContext(), DataDisplayActivity.class));
+			}
+		});
+        
         
      }
 

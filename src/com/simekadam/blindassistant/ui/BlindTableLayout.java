@@ -38,7 +38,7 @@ public class BlindTableLayout extends LinearLayout implements OnTouchListener, O
 	    leftFactor = width/2;
 		topFactor = height/3;
 		this.setOnTouchListener(this);
-		BlindButton.setOnHoverListener(new OnHoverListener() {
+		BlindButton.setOnHoverListener(new BlindButton.OnHoverListener() {
 			
 			@Override
 			public void onHover(int index) {

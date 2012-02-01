@@ -1,12 +1,12 @@
 package com.simekadam.blindassistant;
 
-import com.simekadam.blindassistant.SpeechHelper.OnSpeechEndedListener;
-
 import android.app.Activity;
-import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.util.Log;
+
+import com.simekadam.blindassistant.SpeechHelper.OnSpeechEndedListener;
 
 public class BlindAssistantStartupActivity extends Activity {
 	
@@ -25,7 +25,8 @@ public class BlindAssistantStartupActivity extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
 		if (requestCode == MY_DATA_CHECK_CODE) {
-	        if (resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
+			Log.d("voice data", resultCode+" "+TextToSpeech.Engine.CHECK_VOICE_DATA_MISSING_DATA);
+	       // if (resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
 	            // success, create the TTS instance
 	        		SpeechHelper.getInstance().setOnSpeechEndedListener(new OnSpeechEndedListener() {
 					
@@ -36,16 +37,18 @@ public class BlindAssistantStartupActivity extends Activity {
 			        	startActivity(startApp);
 					}
 				});
-	        	SpeechHelper.getInstance().say("Vítejte v testovací verzi aplikace pro sledování polohy. Já jsem Iveta a budu Vás aplikací provázet. ", this.getApplicationContext(), SpeechHelper.UI_RESPONSE_WITH_CALLBACK);
+	        	//SpeechHelper.getInstance().say("Vítejte v testovací verzi aplikace pro sledování polohy. Já jsem Iveta a budu Vás aplikací provázet. ", this.getApplicationContext(), SpeechHelper.UI_RESPONSE_WITH_CALLBACK);
+	        		Intent startApp = new Intent(getApplicationContext(),BlindAssistantActivity.class);
+		        	startActivity(startApp);
 	        	
-	        	
-	        } else {
-	            // missing data, install it
-	            Intent installIntent = new Intent();
-	            installIntent.setAction(
-	                TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
-	            startActivity(installIntent);
-	        }
+//	        } else {
+//	        	Log.d("voice data", "je to v haji");
+//	            // missing data, install it
+//	            Intent installIntent = new Intent();
+//	            installIntent.setAction(
+//	                TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
+//	            startActivity(installIntent);
+//	        }
 	    }
 	}
 	
