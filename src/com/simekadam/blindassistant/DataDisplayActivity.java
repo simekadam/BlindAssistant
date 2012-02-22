@@ -49,7 +49,8 @@ public class DataDisplayActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.datadisplay);
 		final ToggleButton startServiceBtn = (ToggleButton) findViewById(R.id.toggleUpdaterService);
-		registerReceiver(broadcastReceiver, new IntentFilter(UpdaterService.BROADCAST_MOVING_STATE_UPDATE));
+		registerReceiver(broadcastReceiver, new IntentFilter("com.simekadam.blindassistant.UPDATE_CONTEXT_UI"));
+		registerReceiver(broadcastReceiver, new IntentFilter("com.simekadam.blindassistant.UPDATE_GPS_UI"));
 		initPlot();
 		if(isMyServiceRunning()){
 			//stopService(new Intent(getApplicationContext(), UpdaterService.class));
@@ -168,11 +169,11 @@ public class DataDisplayActivity extends Activity {
         @Override
         public void onReceive(Context context, Intent intent) {
         	Log.d(TAG, intent.getAction());
-        	if(intent.getAction().equals("dataDisplayActivity.UPDATE_CONTEXT_UI")){
+        	if(intent.getAction().equals("com.simekadam.blindassistant.UPDATE_CONTEXT_UI")){
         		updateStateUI(intent);   
             	updatePlot(intent);
         	}
-        	else if(intent.getAction().equals("dataDisplayActivity.UPDATE_GPS_UI")){
+        	else if(intent.getAction().equals("com.simekadam.blindassistant.UPDATE_GPS_UI")){
         		updateGPSUI(
         				intent.getFloatExtra("lat", 0),
         				intent.getFloatExtra("lon", 0),

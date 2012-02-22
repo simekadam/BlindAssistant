@@ -192,7 +192,7 @@ public class UpdaterService extends Service implements SensorEventListener, Loca
 		updateGPSValuesIntent.putExtra("long", location.getLongitude());
 		updateGPSValuesIntent.putExtra("velocity", location.getSpeed());
 		updateGPSValuesIntent.putExtra("acc", location.getAccuracy());
-		updateGPSValuesIntent.setAction("dataDisplayActivity.UPDATE_GPS_UI");
+		updateGPSValuesIntent.setAction("com.simekadam.blindassistant.UPDATE_GPS_UI");
 		sendBroadcast(updateGPSValuesIntent);
 	}
 	
@@ -202,7 +202,7 @@ public class UpdaterService extends Service implements SensorEventListener, Loca
     	stateUpdateIntent.putExtra("time", new Date().toLocaleString());
     	stateUpdateIntent.putExtra("context", variance);
     	stateUpdateIntent.putExtra("vectors", vectors);
-    	stateUpdateIntent.setAction("UPDATE_CONTEXT_UI");
+    	stateUpdateIntent.setAction("com.simekadam.blindassistant.UPDATE_CONTEXT_UI");
     	sendBroadcast(stateUpdateIntent);
     }
 	
@@ -215,7 +215,7 @@ public class UpdaterService extends Service implements SensorEventListener, Loca
     	stateUpdateIntent.putExtra("time", new Date().toLocaleString());
     	stateUpdateIntent.putExtra("context", text);
     	stateUpdateIntent.putExtra("vectors", vectors);
-    	stateUpdateIntent.setAction("UPDATE_CONTEXT_UI");
+    	stateUpdateIntent.setAction("com.simekadam.blindassistant.UPDATE_CONTEXT_UI");
     	sendBroadcast(stateUpdateIntent);
     }
 	

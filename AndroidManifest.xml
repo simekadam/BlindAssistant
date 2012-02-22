@@ -36,28 +36,26 @@
         <activity android:name=".BlindAssistantStartupActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar" android:label="@string/BlindAssistant" android:launchMode="standard" android:icon="@drawable/icon_simple">
             
             <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".InitActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
         <activity android:name=".DataDisplayActivity" android:theme="@android:style/Theme.Holo.NoActionBar" android:icon="@drawable/icon_3d" android:label="AdvancedHyperXPositiveSuperFluousApp">
-            
+            <intent-filter>
+                <action android:name="com.simekadam.blindassistant.UPDATE_GPS_UI"/>
+                <action android:name="com.simekadam.blindassistant.UPDATE_CONTEXT_UI"/>	
+            </intent-filter>
             <intent-filter >
 				<action android:name="android.intent.action.MAIN" />
 					                
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <intent-filter>
-                <action android:name="UPDATE_GPS_UI"/>
-                <action android:name=""/>	
-            </intent-filter>
+            
         </activity>
         <service android:name=".UpdaterService">
             
-             <intent-filter>
-                <action android:name="UPDATE_GPS_UI"/>
-                <action android:name="UPDATE_CONTEXT_UI"/>	
-            </intent-filter>
+             
         </service>
         
     </application>
