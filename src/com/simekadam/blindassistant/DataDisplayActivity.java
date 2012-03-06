@@ -4,12 +4,16 @@ import java.util.LinkedList;
 
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -17,6 +21,7 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -51,6 +56,9 @@ public class DataDisplayActivity extends Activity {
 		final ToggleButton startServiceBtn = (ToggleButton) findViewById(R.id.toggleUpdaterService);
 		registerReceiver(broadcastReceiver, new IntentFilter("com.simekadam.blindassistant.UPDATE_CONTEXT_UI"));
 		registerReceiver(broadcastReceiver, new IntentFilter("com.simekadam.blindassistant.UPDATE_GPS_UI"));
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction(WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION);
+		registerReceiver(broadcastReceiver, intentFilter);
 		initPlot();
 		if(isMyServiceRunning()){
 			//stopService(new Intent(getApplicationContext(), UpdaterService.class));
@@ -168,10 +176,16 @@ public class DataDisplayActivity extends Activity {
 	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-        	Log.d(TAG, intent.getAction());
+        	Log.d("receivedbordel", intent.getAction());
         	if(intent.getAction().equals("com.simekadam.blindassistant.UPDATE_CONTEXT_UI")){
+        		//try{
         		updateStateUI(intent);   
             	updatePlot(intent);
+        		//}
+        		//catch(Exception ex){
+        		//	Log.d(TAG, ex.toString());
+        			
+        		//}
         	}
         	else if(intent.getAction().equals("com.simekadam.blindassistant.UPDATE_GPS_UI")){
         		updateGPSUI(
@@ -180,11 +194,39 @@ public class DataDisplayActivity extends Activity {
         				intent.getFloatExtra("velocity", 0),
         				intent.getFloatExtra("acc", 0) );
         	}
+        	else if (intent.getAction().equals(WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION)) {
+        		String ns = Context.NOTIFICATION_SERVICE;
+        		NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
+
+        		PendingIntent datadisplayintent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(getApplicationContext(),DataDisplayActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+        		
+        		RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.contextnotificationlayout);
+        		contentView.setImageViewResource(R.id.notificationimage, R.drawable.icon_simple);
+        		contentView.setTextViewText(R.id.title, "Context change");
+        		contentView.setTextViewText(R.id.text, intent.getAction());
+        		
+				Notification notification = new Notification(R.drawable.statusbar_icon, "Context change", System.currentTimeMillis());
+				notification.contentView = contentView;
+				notification.contentIntent = datadisplayintent;
+				notification.flags |= Notification.FLAG_AUTO_CANCEL;
+				notification.defaults |= Notification.DEFAULT_SOUND;
+				notification.defaults |= Notification.DEFAULT_VIBRATE;
+				mNotificationManager.notify(42, notification);
+//  	          if (intent.getBooleanExtra(, )) {
+//  	              //do stuff
+//  	        	  Log.d("wifi notifications","connected");
+//  	          } else {
+//  	              // wifi connection was lost
+//  	          }
+  	      }
         	
         }
 
 		
     };
+    
+    
+    
     
     private void updateGPSUI(float lat, float lon, float velocity, float acc) {
 		
@@ -194,6 +236,7 @@ public class DataDisplayActivity extends Activity {
     	LinkedList<Number> list = new LinkedList<Number>();
     	LinkedList<Number> list2 = new LinkedList<Number>();
     	float[] f = intent.getFloatArrayExtra("vectors");
+    	Log.d(TAG, f.length+" ");
     	for (float g : f) {
 			list.add((Number)g);
 		}
