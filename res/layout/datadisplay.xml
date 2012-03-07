@@ -35,7 +35,8 @@
         android:layout_width="wrap_content"
         android:layout_height="200dp"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true" android:layout_marginTop="200dp">
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="200dp" >
 
         <LinearLayout
             android:id="@+id/linearLayout1"
@@ -43,23 +44,19 @@
             android:layout_height="400dp"
             android:orientation="vertical" >
 
+            <com.androidplot.xy.XYPlot
+                android:id="@+id/mySimpleXYPlot2"
+                android:layout_width="fill_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="0dp"
+                title="Fourier transform output for each 5s" />
 
-                <com.androidplot.xy.XYPlot
-                    android:id="@+id/mySimpleXYPlot2"
-                    android:layout_width="fill_parent"
-                    android:layout_height="200dp"
-                    
-                    android:layout_marginTop="0dp"
-                    title="Fourier transform output for each 5s" />
-
-
-                <com.androidplot.xy.XYPlot
-                    android:id="@+id/mySimpleXYPlot1"
-                    android:layout_width="fill_parent"
-                    android:layout_height="200dp"
-                    
-                    android:layout_marginTop="0dp"
-                    title="Accelerometer data for each 5s" />
+            <com.androidplot.xy.XYPlot
+                android:id="@+id/mySimpleXYPlot1"
+                android:layout_width="fill_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="0dp"
+                title="Accelerometer data for each 5s" />
         </LinearLayout>
     </ScrollView>
 

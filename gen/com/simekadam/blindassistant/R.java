@@ -48,6 +48,9 @@ public final class R {
         public static final int BlindAssistant=0x7f040004;
         public static final int StartUpdaterService=0x7f040002;
         public static final int app_name=0x7f040001;
+        public static final int context_car=0x7f040006;
+        public static final int context_none=0x7f040008;
+        public static final int context_walking=0x7f040007;
         public static final int hello=0x7f040000;
         public static final int toggleUpdaterService=0x7f040005;
         public static final int userContext=0x7f040003;

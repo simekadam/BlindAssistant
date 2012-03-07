@@ -3,21 +3,28 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:padding="10dp" >
-    <ImageView android:id="@+id/notificationimage"
-        android:contentDescription="notification image"
+
+    <ImageView
+        android:id="@+id/notificationimage"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:layout_alignParentLeft="true"
-        android:layout_marginRight="10dp" />
-    <TextView android:id="@+id/title"
+        android:layout_marginRight="10dp"
+        android:contentDescription="notification image" />
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/NotificationTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/notificationimage"
-        style="@style/NotificationTitle" />
-    <TextView android:id="@+id/text"
+        android:layout_toRightOf="@id/notificationimage" />
+
+    <TextView
+        android:id="@+id/text"
+        style="@style/NotificationText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/notificationimage"
         android:layout_below="@id/title"
-        style="@style/NotificationText" />
+        android:layout_toRightOf="@id/notificationimage" />
+
 </RelativeLayout>

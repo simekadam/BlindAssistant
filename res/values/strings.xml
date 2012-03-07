@@ -7,5 +7,8 @@
     <string name="userContext">User Context</string>
     <string name="BlindAssistant">Blind Assistant</string>
     <string name="toggleUpdaterService">Updater Service</string>
+    <string name="context_car">car</string>
+    <string name="context_walking">walking</string>
+    <string name="context_none">undefined</string>
 
 </resources>

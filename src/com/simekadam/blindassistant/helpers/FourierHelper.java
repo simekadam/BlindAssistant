@@ -7,8 +7,8 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.simekadam.blindassistant.DatabaseAdapter;
-import com.simekadam.blindassistant.UpdaterService;
+import com.simekadam.blindassistant.helpers.DatabaseAdapter;
+import com.simekadam.blindassistant.services.UpdaterService;
 import com.simekadam.blindassistant.interfaces.ContextCountedListener;
 
 import android.app.NotificationManager;

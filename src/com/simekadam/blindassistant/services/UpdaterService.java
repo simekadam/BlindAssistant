@@ -1,4 +1,4 @@
-package com.simekadam.blindassistant;
+package com.simekadam.blindassistant.services;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,6 +19,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.simekadam.blindassistant.activities.DataDisplayActivity;
+import com.simekadam.blindassistant.helpers.DatabaseAdapter;
+import com.simekadam.blindassistant.R;
 import com.simekadam.blindassistant.helpers.FourierHelper;
 import com.simekadam.blindassistant.interfaces.ContextCountedListener;
 
@@ -216,10 +219,10 @@ public class UpdaterService extends Service implements SensorEventListener, Loca
 	}
 	
 	
-	private void updateStateUI(float variance) {
+	private void updateStateUI(int context) {
  
     	stateUpdateIntent.putExtra("time", new Date().toLocaleString());
-    	stateUpdateIntent.putExtra("context", variance);
+    	stateUpdateIntent.putExtra("context", context);
     	stateUpdateIntent.putExtra("vectors", vectors);
     	stateUpdateIntent.setAction("com.simekadam.blindassistant.UPDATE_CONTEXT_UI");
     	sendBroadcast(stateUpdateIntent);
@@ -282,7 +285,10 @@ public class UpdaterService extends Service implements SensorEventListener, Loca
 		for(int iter = 0; iter < list.size(); iter++){
 			vectors[iter] = (float) list.get(iter);
 		}
-        updateStateUI("zkouska");
+		
+		
+		
+        updateStateUI(userContext);
         Message msg = Message.obtain();
 		msg.arg1 = FourierHelper.COUNT_CONTEXT;
 		msg.obj = list;

@@ -1,4 +1,4 @@
-package com.simekadam.blindassistant;
+package com.simekadam.blindassistant.activities;
 
 import java.util.LinkedList;
 
@@ -20,7 +20,6 @@ import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -32,6 +31,9 @@ import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.StepFormatter;
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYStepMode;
+import com.simekadam.blindassistant.R;
+import com.simekadam.blindassistant.helpers.FourierHelper;
+import com.simekadam.blindassistant.services.UpdaterService;
 
 public class DataDisplayActivity extends Activity {
 
@@ -102,7 +104,19 @@ public class DataDisplayActivity extends Activity {
 	
 	private void updateStateUI(Intent intent){
 		TextView contextView = (TextView) findViewById(R.id.context);
-		contextView.setText(""+intent.getStringExtra("context"));
+		String contextString;
+		int context = intent.getIntExtra("context", 0);
+		switch (context) {
+		case FourierHelper.CAR:
+			contextString = getResources().getString(R.string.context_car);
+			break;
+		case FourierHelper.WALKING:
+			contextString = getResources().getString(R.string.context_walking);
+		default:
+			contextString = getResources().getString(R.string.context_none);
+			break;
+		}
+		contextView.setText(""+intent.getIntExtra("context", 0));
 	}
 	
 	private boolean isMyServiceRunning() {
@@ -176,7 +190,7 @@ public class DataDisplayActivity extends Activity {
 	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-        	Log.d("receivedbordel", intent.getAction());
+        	//Log.d("receivedbordel", intent.getAction());
         	if(intent.getAction().equals("com.simekadam.blindassistant.UPDATE_CONTEXT_UI")){
         		//try{
         		updateStateUI(intent);   
