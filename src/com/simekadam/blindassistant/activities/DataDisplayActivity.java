@@ -208,31 +208,7 @@ public class DataDisplayActivity extends Activity {
         				intent.getFloatExtra("velocity", 0),
         				intent.getFloatExtra("acc", 0) );
         	}
-        	else if (intent.getAction().equals(WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION)) {
-        		String ns = Context.NOTIFICATION_SERVICE;
-        		NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
-
-        		PendingIntent datadisplayintent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(getApplicationContext(),DataDisplayActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
-        		
-        		RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.contextnotificationlayout);
-        		contentView.setImageViewResource(R.id.notificationimage, R.drawable.icon_simple);
-        		contentView.setTextViewText(R.id.title, "Context change");
-        		contentView.setTextViewText(R.id.text, intent.getAction());
-        		
-				Notification notification = new Notification(R.drawable.statusbar_icon, "Context change", System.currentTimeMillis());
-				notification.contentView = contentView;
-				notification.contentIntent = datadisplayintent;
-				notification.flags |= Notification.FLAG_AUTO_CANCEL;
-				notification.defaults |= Notification.DEFAULT_SOUND;
-				notification.defaults |= Notification.DEFAULT_VIBRATE;
-				mNotificationManager.notify(42, notification);
-//  	          if (intent.getBooleanExtra(, )) {
-//  	              //do stuff
-//  	        	  Log.d("wifi notifications","connected");
-//  	          } else {
-//  	              // wifi connection was lost
-//  	          }
-  	      }
+        	
         	
         }
 
@@ -247,6 +223,7 @@ public class DataDisplayActivity extends Activity {
 	}
     
     public void updatePlot(Intent intent){
+    	
     	LinkedList<Number> list = new LinkedList<Number>();
     	LinkedList<Number> list2 = new LinkedList<Number>();
     	float[] f = intent.getFloatArrayExtra("vectors");

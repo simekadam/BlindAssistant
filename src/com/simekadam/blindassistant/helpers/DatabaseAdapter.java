@@ -1,4 +1,4 @@
-package com.simekadam.blindassistant;
+package com.simekadam.blindassistant.helpers;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -56,6 +56,12 @@ public class DatabaseAdapter {
 		values.put(KEY_FOURIER_FREQ, fourierFreq);
 		values.put(KEY_TIME, time);
 		return database.insert(FOURIER_TABLE, null, values);
+	}
+	
+	public long addPositionData(){
+		ContentValues values = new ContentValues();
+		
+		return 1;
 	}
 	
 	

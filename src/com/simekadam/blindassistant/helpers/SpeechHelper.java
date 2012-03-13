@@ -1,4 +1,4 @@
-package com.simekadam.blindassistant;
+package com.simekadam.blindassistant.helpers;
 
 
 import java.util.HashMap;

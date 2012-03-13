@@ -1,5 +1,7 @@
-package com.simekadam.blindassistant;
+package com.simekadam.blindassistant.activities;
 
+import com.simekadam.blindassistant.R;
+import com.simekadam.blindassistant.helpers.SpeechHelper;
 import com.simekadam.blindassistant.ui.BlindButton;
 import com.simekadam.blindassistant.ui.BlindButton.OnDoubleClickListener;
 

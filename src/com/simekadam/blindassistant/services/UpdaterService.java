@@ -19,8 +19,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.simekadam.blindassistant.activities.DataDisplayActivity;
 import com.simekadam.blindassistant.helpers.DatabaseAdapter;
+import com.simekadam.blindassistant.helpers.ServerClient;
 import com.simekadam.blindassistant.R;
 import com.simekadam.blindassistant.helpers.FourierHelper;
 import com.simekadam.blindassistant.interfaces.ContextCountedListener;
@@ -29,8 +33,10 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -38,6 +44,7 @@ import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -113,6 +120,9 @@ public class UpdaterService extends Service implements SensorEventListener, Loca
 		stateUpdateIntent = new Intent();
 		updateGPSValuesIntent = new Intent();
 		openDatabase();
+		
+		
+		
 		list = new ArrayList<Float>();
 		stateUpdatehandler = new Handler()
         {
@@ -126,6 +136,7 @@ public class UpdaterService extends Service implements SensorEventListener, Loca
 		msg.arg1 = FourierHelper.COUNT_CONTEXT;
 		msg.obj = list;
 		stateUpdatehandler.sendMessageDelayed(msg, 5000);
+		registerWifiConnectionCallback();
 	}
 
 	@Override
@@ -137,6 +148,7 @@ public class UpdaterService extends Service implements SensorEventListener, Loca
 		stateUpdatehandler.removeMessages(FourierHelper.COUNT_CONTEXT);
 		database.close();
 		mSensorManager.unregisterListener(this);
+		unregisterWifiConnectionCallback();
 		super.onDestroy();
 	}
 
@@ -146,6 +158,7 @@ public class UpdaterService extends Service implements SensorEventListener, Loca
 	public boolean onUnbind(Intent intent) {
 		// TODO Auto-generated method stub
 		Log.d(TAG, "unbinded");
+		unregisterWifiConnectionCallback();
 		return super.onUnbind(intent);
 	}
 
@@ -224,6 +237,8 @@ public class UpdaterService extends Service implements SensorEventListener, Loca
     	stateUpdateIntent.putExtra("time", new Date().toLocaleString());
     	stateUpdateIntent.putExtra("context", context);
     	stateUpdateIntent.putExtra("vectors", vectors);
+    	stateUpdateIntent.putExtra("counted", outputValues);
+
     	stateUpdateIntent.setAction("com.simekadam.blindassistant.UPDATE_CONTEXT_UI");
     	sendBroadcast(stateUpdateIntent);
     }
@@ -326,8 +341,26 @@ public class UpdaterService extends Service implements SensorEventListener, Loca
 	}
 	
 	
+	private void registerWifiConnectionCallback(){
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction(WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION);
+		registerReceiver(updaterServiceBroadcastReceiver, intentFilter);
+	}
+	
+	private void unregisterWifiConnectionCallback(){
+		unregisterReceiver(updaterServiceBroadcastReceiver);
+	}
+	
 	
 	public void sendDataToServer(){
+		ServerClient.get("http://www.google.cz", null, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(JSONArray response) {
+                // Pull out the first event on the public timeline
+                Log.d("xxxx", response.toString());
+            }
+        });
+		
 		NameValuePair np = new BasicNameValuePair("output",jsonObject.toString());
     	NameValuePair np2 = new BasicNameValuePair("input", mJSONArray2.toString());
     	NameValuePair np3 = new BasicNameValuePair("time", System.currentTimeMillis()+"");
@@ -338,6 +371,22 @@ public class UpdaterService extends Service implements SensorEventListener, Loca
     	nplist.add(np2);
     	nplist.add(np3);
     	nplist.add(np4);
+    	
+    	
+    	RequestParams params = new RequestParams();
+    	
+    	params.put("output",jsonObject.toString());
+    	params.put("input", mJSONArray2.toString());
+    	params.put("time", System.currentTimeMillis()+"");
+    	params.put("location", currentLocation.toString());
+    	
+    	ServerClient.post("http://www.jssport-giant.cz/android/index.php", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(JSONArray response) {
+                // Pull out the first event on the public timeline
+                Log.d("xxxx", response.toString());
+            }
+        });
         //HttpResponse responsePOST = client.execute(post);  
         //HttpEntity resEntity = responsePOST.getEntity();  
         //if (resEntity != null) {    
@@ -345,6 +394,15 @@ public class UpdaterService extends Service implements SensorEventListener, Loca
         //}
 		
 	}
+	
+	
+	class ResponseHandler extends JsonHttpResponseHandler {
+        @Override
+        public void onSuccess(JSONArray response) {
+            // Pull out the first event on the public timeline
+            Log.d("xxxx", response.toString());
+        }
+    };
 	
 	
 	
@@ -404,7 +462,39 @@ public class UpdaterService extends Service implements SensorEventListener, Loca
 	}
 	
 	
-	
+	private BroadcastReceiver updaterServiceBroadcastReceiver = new BroadcastReceiver(){
+		@Override
+		public void onReceive(Context context, Intent intent){
+			if (intent.getAction().equals(WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION)) {
+//        		String ns = Context.NOTIFICATION_SERVICE;
+//        		NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
+//
+//        		PendingIntent datadisplayintent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(getApplicationContext(),DataDisplayActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+//        		
+//        		RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.contextnotificationlayout);
+//        		contentView.setImageViewResource(R.id.notificationimage, R.drawable.icon_simple);
+//        		contentView.setTextViewText(R.id.title, "Context change");
+//        		contentView.setTextViewText(R.id.text, intent.getAction());
+//        		
+//				Notification notification = new Notification(R.drawable.statusbar_icon, "Context change", System.currentTimeMillis());
+//				notification.contentView = contentView;
+//				notification.contentIntent = datadisplayintent;
+//				notification.flags |= Notification.FLAG_AUTO_CANCEL;
+//				notification.defaults |= Notification.DEFAULT_SOUND;
+//				notification.defaults |= Notification.DEFAULT_VIBRATE;
+//				mNotificationManager.notify(42, notification);
+////  	          if (intent.getBooleanExtra(, )) {
+////  	              //do stuff
+////  	        	  Log.d("wifi notifications","connected");
+////  	          } else {
+////  	              // wifi connection was lost
+////  	          }
+				
+				sendDataToServer();
+				Log.d("xxxx","wifitoggle");
+			}
+		}
+	};
 	
 		
 

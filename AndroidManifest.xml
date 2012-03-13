@@ -18,26 +18,26 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
         <activity
-            android:name=".BlindAssistantActivity"
+            android:name=".activities.BlindAssistantActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".BlindSearchResultActivity"
+            android:name=".activities.BlindSearchResultActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".BlindSettingsActivity"
+            android:name=".activities.BlindSettingsActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".TTSActivity"
+            android:name=".activities.TTSActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
         <activity
-            android:name=".BlindAssistantStartupActivity"
+            android:name=".activities.BlindAssistantStartupActivity"
             android:icon="@drawable/icon_simple"
             android:label="@string/BlindAssistant"
             android:launchMode="standard"
@@ -49,11 +49,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".InitActivity"
+            android:name=".activities.InitActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
         <activity
-            android:name=".DataDisplayActivity"
+            android:name=".activities.DataDisplayActivity"
             android:icon="@drawable/icon_3d"
             android:label="AdvancedHyperXPositiveSuperFluousApp"
             android:theme="@android:style/Theme.Holo.NoActionBar" >
@@ -68,7 +68,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".UpdaterService" >
+        <service android:name=".services.UpdaterService" >
         </service>
     </application>
 

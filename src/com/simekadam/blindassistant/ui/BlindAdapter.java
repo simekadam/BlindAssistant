@@ -1,7 +1,7 @@
 package com.simekadam.blindassistant.ui;
 
-import com.simekadam.blindassistant.BlindGridView;
-import com.simekadam.blindassistant.SpeechHelper;
+import com.simekadam.blindassistant.ui.BlindGridView;
+import com.simekadam.blindassistant.helpers.SpeechHelper;
 
 import android.R;
 import android.content.Context;

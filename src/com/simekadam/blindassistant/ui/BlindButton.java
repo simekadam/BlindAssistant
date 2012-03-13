@@ -1,7 +1,7 @@
 package com.simekadam.blindassistant.ui;
 
-import com.simekadam.blindassistant.SpeechHelper;
-import com.simekadam.blindassistant.SpeechHelper.OnSpeechEndedListener;
+import com.simekadam.blindassistant.helpers.SpeechHelper;
+import com.simekadam.blindassistant.helpers.SpeechHelper.OnSpeechEndedListener;
 import com.simekadam.blindassistant.ui.BlindTableLayout.OnDoubleClickListener;
 
 import android.content.Context;

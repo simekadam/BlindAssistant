@@ -1,4 +1,6 @@
-package com.simekadam.blindassistant;
+package com.simekadam.blindassistant.activities;
+
+import com.simekadam.blindassistant.helpers.SpeechHelper;
 
 import android.app.Activity;
 import android.content.Intent;

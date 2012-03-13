@@ -1,4 +1,4 @@
-package com.simekadam.blindassistant;
+package com.simekadam.blindassistant.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,7 +6,8 @@ import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 
-import com.simekadam.blindassistant.SpeechHelper.OnSpeechEndedListener;
+import com.simekadam.blindassistant.helpers.SpeechHelper.OnSpeechEndedListener;
+import com.simekadam.blindassistant.helpers.SpeechHelper;
 
 public class BlindAssistantStartupActivity extends Activity {
 	

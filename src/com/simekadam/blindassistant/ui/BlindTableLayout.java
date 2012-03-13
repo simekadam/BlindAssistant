@@ -1,6 +1,6 @@
 package com.simekadam.blindassistant.ui;
 
-import com.simekadam.blindassistant.SpeechHelper;
+import com.simekadam.blindassistant.helpers.SpeechHelper;
 import com.simekadam.blindassistant.ui.BlindButton.OnHoverListener;
 
 import android.content.Context;

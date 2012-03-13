@@ -1,4 +1,4 @@
-package com.simekadam.blindassistant;
+package com.simekadam.blindassistant.services;
 
 import android.app.Service;
 import android.content.Intent;
