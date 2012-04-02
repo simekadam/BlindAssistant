@@ -4,7 +4,8 @@ import java.util.ArrayList;
 
 public interface ContextCountedListener {
 	
-		 void contextCounted(ArrayList<Float> outputData, int context);
+		 void contextCounted(ArrayList<Float> outputData, int context, int intent);
 		 
-	
+		 void contextCounted(ArrayList<Float> outputData,ArrayList<Float> inputData, int context, int intent);
+		 
 }

@@ -3,31 +3,12 @@ package com.simekadam.blindassistant.services;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.ResourceBundle;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
-import com.simekadam.blindassistant.activities.DataDisplayActivity;
-import com.simekadam.blindassistant.helpers.DatabaseAdapter;
-import com.simekadam.blindassistant.helpers.ServerClient;
-import com.simekadam.blindassistant.R;
-import com.simekadam.blindassistant.helpers.FourierHelper;
-import com.simekadam.blindassistant.interfaces.ContextCountedListener;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -38,59 +19,65 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.wifi.WifiManager;
-import android.os.AsyncTask;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.text.Html;
 import android.util.Log;
 import android.widget.RemoteViews;
-import edu.emory.mathcs.jtransforms.fft.FloatFFT_1D;
 
-public class UpdaterService extends Service implements SensorEventListener, LocationListener, ContextCountedListener  {
-	
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+import com.simekadam.blindassistant.R;
+import com.simekadam.blindassistant.activities.DataDisplayActivity;
+import com.simekadam.blindassistant.helpers.DatabaseAdapter;
+import com.simekadam.blindassistant.helpers.FourierHelper;
+import com.simekadam.blindassistant.helpers.LocationHelper;
+import com.simekadam.blindassistant.helpers.MotionContextHelper;
+import com.simekadam.blindassistant.helpers.MotionDetectHelper;
+import com.simekadam.blindassistant.helpers.ServerClient;
+import com.simekadam.blindassistant.interfaces.ContextAlertListener;
+import com.simekadam.blindassistant.interfaces.ContextCountedListener;
+import com.simekadam.blindassistant.interfaces.LocationHelperEventsListener;
+import com.simekadam.blindassistant.interfaces.MotionDetectListener;
+
+public class UpdaterService extends Service implements 
+		LocationHelperEventsListener, ContextAlertListener, MotionDetectListener {
+
 	private static final String TAG = UpdaterService.class.getSimpleName();
-    public static final String BROADCAST_MOVING_STATE_UPDATE = "com.simekadam.blindassistant.updatestate";
-    private static final int WALKING = 1;
-    private static final int STEADY = 0;
-    private static final int CAR = 2;
-    private DatabaseAdapter database;
+	public static final String BROADCAST_MOVING_STATE_UPDATE = "com.simekadam.blindassistant.updatestate";
+
+	private DatabaseAdapter database;
 	private SensorManager mSensorManager;
-    private ArrayList<Float> list;
-    
-    NotificationManager mNotificationManager;
-    private Intent stateUpdateIntent;
-    private Intent updateGPSValuesIntent;
-    private float[] vectors;
-    private float[] outputValues;
-    private LocationManager locationManager;
+
+	NotificationManager mNotificationManager;
+	private Intent stateUpdateIntent;
+	private Intent updateGPSValuesIntent;
+	private float[] vectors;
+	private float[] outputValues;
+	private LocationManager locationManager;
 	private JSONArray mJSONArray;
 	private JSONArray mJSONArray2;
 	private JSONObject jsonObject;
 	private JSONObject currentLocation;
-    private Sensor mAccelerometer;
-    private static int userContext;
-    private static PendingIntent datadisplayintent; 
-    private ContextCountedListener contextCountedListener;
-    private Handler stateUpdatehandler;
-    
+	private Sensor mAccelerometer;
+	private static int userContext;
+	private static PendingIntent datadisplayintent;
+	private ContextCountedListener contextCountedListener;
+	private boolean loggingActive = false;
+	private static int steadyCounter = 0;
+	private static int motionCounter = 0;
 	@Override
 	public void onCreate() {
 		// TODO Auto-generated method stub
 		Log.d(TAG, "created");
 		super.onCreate();
-        
 
 	}
-	
+
 	@Override
 	public void onStart(Intent intent, int startId) {
 		// TODO Auto-generated method stub
@@ -98,67 +85,36 @@ public class UpdaterService extends Service implements SensorEventListener, Loca
 		super.onStart(intent, startId);
 		String ns = Context.NOTIFICATION_SERVICE;
 		mNotificationManager = (NotificationManager) getSystemService(ns);
-		locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-		FourierHelper.setOnNewsUpdateListener(this);
-		//dummy object because of compatibility with server
-		currentLocation = new JSONObject();
-		try{
-		currentLocation.accumulate("long", "");
-		currentLocation.accumulate("lat", "");
-		currentLocation.accumulate("alt", "");
-		currentLocation.accumulate("acc", "");
-		currentLocation.accumulate("time", "");
-		}catch(Exception e){
-			Log.d(TAG, e.toString());
-		}
+
+		startMotionDetection();
 		
-		
-		
-		mSensorManager = (SensorManager) this.getSystemService(SENSOR_SERVICE);
-        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-        mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
-		stateUpdateIntent = new Intent();
-		updateGPSValuesIntent = new Intent();
 		openDatabase();
-		
-		
-		
-		list = new ArrayList<Float>();
-		stateUpdatehandler = new Handler()
-        {
-            @Override
-            public void handleMessage(Message msg)
-            {
-                FourierHelper.processFourierData(msg);
-            }
-        };
-		Message msg = Message.obtain();
-		msg.arg1 = FourierHelper.COUNT_CONTEXT;
-		msg.obj = list;
-		stateUpdatehandler.sendMessageDelayed(msg, 5000);
+
 		registerWifiConnectionCallback();
 	}
 
 	@Override
 	public void onDestroy() {
 		// TODO Auto-generated method stub
-		
+
 		Log.d(TAG, "destroyed");
 		this.stopSelf();
-		stateUpdatehandler.removeMessages(FourierHelper.COUNT_CONTEXT);
 		database.close();
-		mSensorManager.unregisterListener(this);
+		MotionContextHelper.getMotionContextHelper(getApplicationContext()).stopContextResolve(this);
+		stopLocationLogging();
+		stopMotionDetection();
 		unregisterWifiConnectionCallback();
 		super.onDestroy();
 	}
-
-	
 
 	@Override
 	public boolean onUnbind(Intent intent) {
 		// TODO Auto-generated method stub
 		Log.d(TAG, "unbinded");
 		unregisterWifiConnectionCallback();
+		MotionContextHelper.getMotionContextHelper(getApplicationContext()).stopContextResolve(this);
+		stopLocationLogging();
+		stopMotionDetection();
 		return super.onUnbind(intent);
 	}
 
@@ -168,334 +124,357 @@ public class UpdaterService extends Service implements SensorEventListener, Loca
 		return null;
 	}
 
-	
-	
-	
-	
-	@Override
-	public void onAccuracyChanged(Sensor arg0, int arg1) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	
-	
-	
-	
-	@Override
-	public void onSensorChanged(SensorEvent event) {
-		// TODO Auto-generated method stub
-		
-		
-		//ramp-speed - play with this value until satisfied
-
-		//last result storage - keep definition outside of this function, eg. in wrapping object
-		float result[] = new float[3];
-		float accel[] = new float[3]; 
-
-		//acceleration.x,.y,.z is the input from the sensor
-
-		//result.x,.y,.z is the filtered result
-
-		final float kFilteringFactor = 0.1f;
-
-		//last result storage - keep definition outside of this function, eg. in wrapping object
-
-		//acceleration.x,.y,.z is the input from the sensor
-
-		//result.x,.y,.z is the filtered result
-
-		accel[0] = event.values[0] * kFilteringFactor + accel[0] * (1.0f - kFilteringFactor);
-		accel[1] = event.values[1] * kFilteringFactor + accel[1] * (1.0f - kFilteringFactor);
-		accel[2] = event.values[2] * kFilteringFactor + accel[2] * (1.0f - kFilteringFactor);
-		result[0] = event.values[0];
-		result[1] = event.values[1];
-		result[2] = event.values[2];
-		
-				double test =  Math.sqrt(result[0]*result[0]+result[1]*result[1]+result[2]*result[2]);
-				
-				float vector =(float) test;
-	        	//database.addAccelerometerValue(vector, event.values[0], event.values[1], event.values[2],(int) System.currentTimeMillis());
-
-				//Log.d(TAG,event.values[0]+" "+event.values[1]+" "+event.values[2]);
-		list.add(vector);
-		
-	}
-	
-	private void updateGPSValues(Location location){
+	private void updateGPSValues(Location location) {
 		updateGPSValuesIntent.putExtra("lat", location.getLatitude());
 		updateGPSValuesIntent.putExtra("long", location.getLongitude());
 		updateGPSValuesIntent.putExtra("velocity", location.getSpeed());
 		updateGPSValuesIntent.putExtra("acc", location.getAccuracy());
-		updateGPSValuesIntent.setAction("com.simekadam.blindassistant.UPDATE_GPS_UI");
+		updateGPSValuesIntent
+				.setAction("com.simekadam.blindassistant.UPDATE_GPS_UI");
 		sendBroadcast(updateGPSValuesIntent);
 	}
-	
-	
+
 	private void updateStateUI(int context) {
- 
-    	stateUpdateIntent.putExtra("time", new Date().toLocaleString());
-    	stateUpdateIntent.putExtra("context", context);
-    	stateUpdateIntent.putExtra("vectors", vectors);
-    	stateUpdateIntent.putExtra("counted", outputValues);
 
-    	stateUpdateIntent.setAction("com.simekadam.blindassistant.UPDATE_CONTEXT_UI");
-    	sendBroadcast(stateUpdateIntent);
-    }
+		stateUpdateIntent.putExtra("time", new Date().toLocaleString());
+		stateUpdateIntent.putExtra("context", context);
+		stateUpdateIntent.putExtra("vectors", vectors);
+		stateUpdateIntent.putExtra("counted", outputValues);
+
+		stateUpdateIntent
+				.setAction("com.simekadam.blindassistant.UPDATE_CONTEXT_UI");
+		sendBroadcast(stateUpdateIntent);
+	}
+
 	
-	
-	public final void contextComputedHandler(ArrayList<Float> output, int context){
-            
-			
-		
-		mJSONArray = new JSONArray(output);
-    	jsonObject = new JSONObject();
-    	try {
-			jsonObject.accumulate("outputData", mJSONArray);
-			jsonObject.accumulate("context", context);
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			Log.d(TAG, e.toString());
-		}
-		mJSONArray2 = new JSONArray(list);
-    	//grabURL("http://10.0.0.1/blindassistant/index.php");
-    	
-		//database.addFourierData(max, freq, (int)System.currentTimeMillis());
-    	
-		
-		
-    	
-    	if (context != userContext) {
-    		userContext = context;
-    		datadisplayintent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(getApplicationContext(),DataDisplayActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
-    		
-    		RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.contextnotificationlayout);
-    		contentView.setImageViewResource(R.id.notificationimage, R.drawable.icon_simple);
-    		contentView.setTextViewText(R.id.title, "Context change");
-    		contentView.setTextViewText(R.id.text, "You are now "+userContext);
-    		
-			Notification notification = new Notification(R.drawable.statusbar_icon, "Context change", System.currentTimeMillis());
-			notification.contentView = contentView;
-			notification.contentIntent = datadisplayintent;
-			notification.flags |= Notification.FLAG_AUTO_CANCEL;
-			notification.defaults |= Notification.DEFAULT_SOUND;
-			notification.defaults |= Notification.DEFAULT_VIBRATE;
-			mNotificationManager.notify(42, notification);
 
-
-		}
-    	if(userContext == WALKING){
-    		startGPS();
-
-    	}
-    	//stateUpdateIntent.putExtra("counted", outputData);
-		//updateStateUI(text);
-		
-		
-		outputValues = new float[output.size()];
-		for(int iter = 0; iter < output.size(); iter++){
-			outputValues[iter] = (float) output.get(iter);
-		}
-		vectors = new float[list.size()];
-		for(int iter = 0; iter < list.size(); iter++){
-			vectors[iter] = (float) list.get(iter);
-		}
-		
-		
-		
-        updateStateUI(userContext);
-        Message msg = Message.obtain();
-		msg.arg1 = FourierHelper.COUNT_CONTEXT;
-		msg.obj = list;
-		stateUpdatehandler.sendMessageDelayed(msg, 5000);
-    	list.clear();
-
-    }
-	
-	
 	private void updateStateUI(String text) {
-		 
-    	stateUpdateIntent.putExtra("time", new Date().toLocaleString());
-    	stateUpdateIntent.putExtra("context", text);
-    	stateUpdateIntent.putExtra("vectors", vectors);
-    	stateUpdateIntent.putExtra("counted", outputValues);
-    	stateUpdateIntent.setAction("com.simekadam.blindassistant.UPDATE_CONTEXT_UI");
-    	sendBroadcast(stateUpdateIntent);
-    }
-	
-	
-		
 
-	
-	
-	private void openDatabase(){
-		if(database==null){
+		stateUpdateIntent.putExtra("time", new Date().toLocaleString());
+		stateUpdateIntent.putExtra("context", text);
+		stateUpdateIntent.putExtra("vectors", vectors);
+		stateUpdateIntent.putExtra("counted", outputValues);
+		stateUpdateIntent
+				.setAction("com.simekadam.blindassistant.UPDATE_CONTEXT_UI");
+		sendBroadcast(stateUpdateIntent);
+	}
+
+	private void openDatabase() {
+		if (database == null) {
 			database = new DatabaseAdapter(getApplicationContext());
 			database.open();
 		}
 	}
-	private void closeDatabase(){
-		if(database!=null){
+
+	private void closeDatabase() {
+		if (database != null) {
 			database.close();
 		}
 	}
-	
-	
-	private void registerWifiConnectionCallback(){
+
+	private void registerWifiConnectionCallback() {
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION);
 		registerReceiver(updaterServiceBroadcastReceiver, intentFilter);
 	}
-	
-	private void unregisterWifiConnectionCallback(){
+
+	private void unregisterWifiConnectionCallback() {
 		unregisterReceiver(updaterServiceBroadcastReceiver);
 	}
-	
-	
-	public void sendDataToServer(){
-		ServerClient.get("http://www.google.cz", null, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(JSONArray response) {
-                // Pull out the first event on the public timeline
-                Log.d("xxxx", response.toString());
-            }
-        });
-		
-		NameValuePair np = new BasicNameValuePair("output",jsonObject.toString());
-    	NameValuePair np2 = new BasicNameValuePair("input", mJSONArray2.toString());
-    	NameValuePair np3 = new BasicNameValuePair("time", System.currentTimeMillis()+"");
-    	Log.d("location", currentLocation.toString());
-    	NameValuePair np4 = new BasicNameValuePair("location", currentLocation.toString());
-    	List<NameValuePair> nplist = new ArrayList<NameValuePair>();
-    	nplist.add(np);
-    	nplist.add(np2);
-    	nplist.add(np3);
-    	nplist.add(np4);
-    	
-    	
-    	RequestParams params = new RequestParams();
-    	
-    	params.put("output",jsonObject.toString());
-    	params.put("input", mJSONArray2.toString());
-    	params.put("time", System.currentTimeMillis()+"");
-    	params.put("location", currentLocation.toString());
-    	
-    	ServerClient.post("http://www.jssport-giant.cz/android/index.php", params, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(JSONArray response) {
-                // Pull out the first event on the public timeline
-                Log.d("xxxx", response.toString());
-            }
-        });
-        //HttpResponse responsePOST = client.execute(post);  
-        //HttpEntity resEntity = responsePOST.getEntity();  
-        //if (resEntity != null) {    
 
-        //}
-		
+	public void sendDataToServer() {
+		Log.d(TAG, "trying to send data to server");
+		ServerClient.get("http://www.google.cz", null,
+				new AsyncHttpResponseHandler() {
+					@Override
+					public void onFailure(Throwable arg0) {
+						// TODO Auto-generated method stub
+						Log.d("httpzkouska", arg0.toString());
+						super.onFailure(arg0);
+					}
+
+					@Override
+					public void onFinish() {
+						// TODO Auto-generated method stub
+						super.onFinish();
+					}
+
+					@Override
+					public void onStart() {
+						// TODO Auto-generated method stub
+						super.onStart();
+					}
+
+					@Override
+					public void onSuccess(String arg0) {
+						// TODO Auto-generated method stub
+						Log.d("httpzkouska", arg0);
+						super.onSuccess(arg0);
+					}
+				});
+
+		NameValuePair np = new BasicNameValuePair("output",
+				jsonObject.toString());
+		NameValuePair np2 = new BasicNameValuePair("input",
+				mJSONArray2.toString());
+		NameValuePair np3 = new BasicNameValuePair("time",
+				System.currentTimeMillis() + "");
+		Log.d("location", currentLocation.toString());
+		NameValuePair np4 = new BasicNameValuePair("location",
+				currentLocation.toString());
+		List<NameValuePair> nplist = new ArrayList<NameValuePair>();
+		nplist.add(np);
+		nplist.add(np2);
+		nplist.add(np3);
+		nplist.add(np4);
+
+		RequestParams params = new RequestParams();
+
+		params.put("output", jsonObject.toString());
+		params.put("input", mJSONArray2.toString());
+		params.put("time", System.currentTimeMillis() + "");
+		params.put("location", currentLocation.toString());
+
+		ServerClient.post("http://www.jssport-giant.cz/android/index.php",
+				params, new AsyncHttpResponseHandler() {
+
+					@Override
+					public void onFailure(Throwable arg0) {
+						// TODO Auto-generated method stub
+						Log.d("httpzkouska", arg0.toString());
+						super.onFailure(arg0);
+					}
+
+					@Override
+					public void onFinish() {
+						// TODO Auto-generated method stub
+						super.onFinish();
+					}
+
+					@Override
+					public void onStart() {
+						// TODO Auto-generated method stub
+						super.onStart();
+					}
+
+					@Override
+					public void onSuccess(String arg0) {
+						// TODO Auto-generated method stub
+						Log.d("httpzkouska", arg0);
+						super.onSuccess(arg0);
+					}
+
+				});
+		// HttpResponse responsePOST = client.execute(post);
+		// HttpEntity resEntity = responsePOST.getEntity();
+		// if (resEntity != null) {
+
+		// }
+
 	}
-	
-	
-	class ResponseHandler extends JsonHttpResponseHandler {
-        @Override
-        public void onSuccess(JSONArray response) {
-            // Pull out the first event on the public timeline
-            Log.d("xxxx", response.toString());
-        }
-    };
-	
-	
-	
-	
-	
-		        	
-		   
-	     
 
+	class ResponseHandler extends AsyncHttpResponseHandler {
 
-	public void startGPS(){
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5, 0, this);
+	};
+
+	private void startGPS() {
+		LocationHelper.getLocationHelper(getApplicationContext())
+				.registerLocationUpdates(10000);
 	}
 
-	@Override
-	public void onLocationChanged(Location location) {
-		// TODO Auto-generated method stub
-		currentLocation = new JSONObject();
-		try{
-		currentLocation.accumulate("long", location.getLongitude());
-		currentLocation.accumulate("lat", location.getLatitude());
-		currentLocation.accumulate("alt", location.getAltitude());
-		currentLocation.accumulate("acc", location.getAccuracy());
-		currentLocation.accumulate("time", location.getTime());
-		Log.d(TAG, currentLocation.toString());
-		}catch(Exception e){
-			Log.d(TAG, e.toString());
+	private void stopGPS() {
+		LocationHelper.getLocationHelper(getApplicationContext())
+				.unregisterLocationUpdates();
+	}
+
+	private void startLocationLogging() {
+		if (!loggingActive) {
+			startGPS();
+			LocationHelper.getLocationHelper(getApplicationContext())
+					.addLocationHelperEventListener(this);
+			loggingActive = true;
+			startMotionDetection();
 		}
-		updateGPSValues(location);
 	}
 
-	@Override
-	public void onProviderDisabled(String provider) {
-		// TODO Auto-generated method stub
-		
+	private void stopLocationLogging() {
+		if (loggingActive) {
+			LocationHelper.getLocationHelper(getApplicationContext())
+					.removeLocationHelperEventListener(this);
+			stopGPS();
+			loggingActive = false;
+		}
+	}
+	
+	
+	private void startMotionDetection(){
+		MotionDetectHelper.getInstance(this.getApplicationContext()).startMotionDetection();
+		MotionDetectHelper.getInstance(getApplicationContext()).addMotionDetectListener(this);
+	}
+	private void stopMotionDetection(){
+		Log.d(TAG, "motion detection has been stoppped");
+		MotionDetectHelper.getInstance(this.getApplicationContext()).stopMotionDetection();
+		MotionDetectHelper.getInstance(getApplicationContext()).removeMotionDetectListener(this);
+
+	}
+	
+	private void pauseMotionDetection(){
+		MotionDetectHelper.getInstance(this.getApplicationContext()).stopMotionDetection();
+
+	}
+	
+	
+
+	private void notify(int context) {
+		datadisplayintent = PendingIntent.getActivity(getApplicationContext(),
+				0, new Intent(getApplicationContext(),
+						DataDisplayActivity.class),
+				PendingIntent.FLAG_UPDATE_CURRENT);
+
+		RemoteViews contentView = new RemoteViews(getPackageName(),
+				R.layout.contextnotificationlayout);
+		contentView.setImageViewResource(R.id.notificationimage,
+				R.drawable.icon_simple);
+		contentView.setTextViewText(R.id.title, "Context change");
+		contentView.setTextViewText(R.id.text, "You are now " + context);
+
+		Notification notification = new Notification(R.drawable.statusbar_icon,
+				"Context change", System.currentTimeMillis());
+		notification.contentView = contentView;
+		notification.contentIntent = datadisplayintent;
+		notification.flags |= Notification.FLAG_AUTO_CANCEL;
+		notification.defaults |= Notification.DEFAULT_SOUND;
+		notification.defaults |= Notification.DEFAULT_VIBRATE;
+		mNotificationManager.notify(42, notification);
+	}
+	
+	private void notify(String title, String text){
+		datadisplayintent = PendingIntent.getActivity(getApplicationContext(),
+				0, new Intent(getApplicationContext(),
+						DataDisplayActivity.class),
+				PendingIntent.FLAG_UPDATE_CURRENT);
+
+		RemoteViews contentView = new RemoteViews(getPackageName(),
+				R.layout.contextnotificationlayout);
+		contentView.setImageViewResource(R.id.notificationimage,
+				R.drawable.icon_simple);
+		contentView.setTextViewText(R.id.title, title);
+		contentView.setTextViewText(R.id.text, text);
+
+		Notification notification = new Notification(R.drawable.statusbar_icon,
+				"Context change", System.currentTimeMillis());
+		notification.contentView = contentView;
+		notification.contentIntent = datadisplayintent;
+		notification.flags |= Notification.FLAG_AUTO_CANCEL;
+		notification.defaults |= Notification.DEFAULT_SOUND;
+		notification.defaults |= Notification.DEFAULT_VIBRATE;
+		mNotificationManager.notify(42, notification);
 	}
 
-	@Override
-	public void onProviderEnabled(String provider) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onStatusChanged(String provider, int status, Bundle extras) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	
-	
-
-	@Override
-	public void contextCounted(ArrayList<Float> outputData, int context) {
-		// TODO Auto-generated method stub
-		contextComputedHandler(outputData, context);
-	}
-	
-	
-	private BroadcastReceiver updaterServiceBroadcastReceiver = new BroadcastReceiver(){
+	private BroadcastReceiver updaterServiceBroadcastReceiver = new BroadcastReceiver() {
 		@Override
-		public void onReceive(Context context, Intent intent){
-			if (intent.getAction().equals(WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION)) {
-//        		String ns = Context.NOTIFICATION_SERVICE;
-//        		NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
-//
-//        		PendingIntent datadisplayintent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(getApplicationContext(),DataDisplayActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
-//        		
-//        		RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.contextnotificationlayout);
-//        		contentView.setImageViewResource(R.id.notificationimage, R.drawable.icon_simple);
-//        		contentView.setTextViewText(R.id.title, "Context change");
-//        		contentView.setTextViewText(R.id.text, intent.getAction());
-//        		
-//				Notification notification = new Notification(R.drawable.statusbar_icon, "Context change", System.currentTimeMillis());
-//				notification.contentView = contentView;
-//				notification.contentIntent = datadisplayintent;
-//				notification.flags |= Notification.FLAG_AUTO_CANCEL;
-//				notification.defaults |= Notification.DEFAULT_SOUND;
-//				notification.defaults |= Notification.DEFAULT_VIBRATE;
-//				mNotificationManager.notify(42, notification);
-////  	          if (intent.getBooleanExtra(, )) {
-////  	              //do stuff
-////  	        	  Log.d("wifi notifications","connected");
-////  	          } else {
-////  	              // wifi connection was lost
-////  	          }
-				
+		public void onReceive(Context context, Intent intent) {
+			if (intent.getAction().equals(
+					WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION)) {
+				// String ns = Context.NOTIFICATION_SERVICE;
+				// NotificationManager mNotificationManager =
+				// (NotificationManager) getSystemService(ns);
+				//
+				// PendingIntent datadisplayintent =
+				// PendingIntent.getActivity(getApplicationContext(), 0, new
+				// Intent(getApplicationContext(),DataDisplayActivity.class),
+				// PendingIntent.FLAG_UPDATE_CURRENT);
+				//
+				// RemoteViews contentView = new RemoteViews(getPackageName(),
+				// R.layout.contextnotificationlayout);
+				// contentView.setImageViewResource(R.id.notificationimage,
+				// R.drawable.icon_simple);
+				// contentView.setTextViewText(R.id.title, "Context change");
+				// contentView.setTextViewText(R.id.text, intent.getAction());
+				//
+				// Notification notification = new
+				// Notification(R.drawable.statusbar_icon, "Context change",
+				// System.currentTimeMillis());
+				// notification.contentView = contentView;
+				// notification.contentIntent = datadisplayintent;
+				// notification.flags |= Notification.FLAG_AUTO_CANCEL;
+				// notification.defaults |= Notification.DEFAULT_SOUND;
+				// notification.defaults |= Notification.DEFAULT_VIBRATE;
+				// mNotificationManager.notify(42, notification);
+				// // if (intent.getBooleanExtra(, )) {
+				// // //do stuff
+				// // Log.d("wifi notifications","connected");
+				// // } else {
+				// // // wifi connection was lost
+				// // }
+
 				sendDataToServer();
-				Log.d("xxxx","wifitoggle");
+				Log.d("xxxx", "wifitoggle");
 			}
 		}
 	};
-	
+
+	@Override
+	public void onLocationChanged() {
+		double latitude = LocationHelper.getLocationHelper(
+				getApplicationContext()).getCurrentLatitude();
+		double longitude = LocationHelper.getLocationHelper(
+				getApplicationContext()).getCurrentLongitude();
+		long time = LocationHelper.getLocationHelper(getApplicationContext())
+				.getCurrentLocationTime();
+		float velocity = LocationHelper.getLocationHelper(getApplicationContext()).getCurrentVelocity();
+		Log.d(TAG, "speed: "+velocity);
 		
+		// ulozit do DB
+		notify("Ukladam polohu", "lat: "+latitude+", lon: "+longitude);
+		database.addPositionData(latitude, longitude, time);
+		Log.d(TAG, "ukladam do DB");
+	}
+
+	
+	@Override
+	public void contextAlert(int context) {
+		MotionContextHelper.getMotionContextHelper(getApplicationContext()).stopContextResolve(this);
+		notify(context);
+		switch (context) {
+		case MotionContextHelper.WALKING:
+			startLocationLogging();
+			Log.d(TAG, "location monitoring has been started");
+			break;
+		default:
+			stopLocationLogging();
+			MotionContextHelper.getMotionContextHelper(getApplicationContext()).stopContextResolve(this);
+			Log.d(TAG, "location monitoring has been stopped");
+			startMotionDetection();
+			break;
+		}
+
+	}
+
+	@Override
+	public void MotionDetected() {
+		// TODO Auto-generated method stub
+		steadyCounter = 0;
+		if(++motionCounter > 3 && !loggingActive){
+			motionCounter = 0;
+			MotionContextHelper.getMotionContextHelper(getApplicationContext()).startContextResolve(this);
+			pauseMotionDetection();
+		}else{
+		startMotionDetection();
+		}
+	}
+	
+	public void SteadyDetected(){
+		motionCounter = 0;
+		if(++steadyCounter>3 && loggingActive){
+			steadyCounter = 0;
+			MotionContextHelper.getMotionContextHelper(getApplicationContext()).startContextResolve(this);
+			pauseMotionDetection();
+		}
+		else{
+			startMotionDetection();
+
+		}
+	}
 
 }

@@ -1,5 +1,6 @@
 package com.simekadam.blindassistant.activities;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 import android.app.Activity;
@@ -15,6 +16,7 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -33,13 +35,19 @@ import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYStepMode;
 import com.simekadam.blindassistant.R;
 import com.simekadam.blindassistant.helpers.FourierHelper;
+import com.simekadam.blindassistant.helpers.MotionContextHelper;
+import com.simekadam.blindassistant.interfaces.ContextCountedListener;
 import com.simekadam.blindassistant.services.UpdaterService;
 
-public class DataDisplayActivity extends Activity {
+public class DataDisplayActivity extends Activity implements ContextCountedListener{
 
+	
 	private static final String TAG = DataDisplayActivity.class.getSimpleName();
 	SimpleXYSeries series1;
 	SimpleXYSeries series2;
+	private static PendingIntent datadisplayintent;
+	NotificationManager mNotificationManager;
+
 	XYPlot mySimpleXYPlot;
 	XYPlot mySimpleXYPlot2;
 	@Override
@@ -62,23 +70,33 @@ public class DataDisplayActivity extends Activity {
 		intentFilter.addAction(WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION);
 		registerReceiver(broadcastReceiver, intentFilter);
 		initPlot();
-		if(isMyServiceRunning()){
+		mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+		FourierHelper.setOnContextCountedListener(this);
+		TelephonyManager tMgr =(TelephonyManager)getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+  	  String mPhoneNumber = tMgr.getLine1Number();
+  	  if(mPhoneNumber == null){
+  		  Log.d(TAG, "pruser");
+  	  }
+  	  if(isMyServiceRunning()){
 			//stopService(new Intent(getApplicationContext(), UpdaterService.class));
-			startServiceBtn.setText("Stop updater service");
+			startServiceBtn.setText(mPhoneNumber);
 			startServiceBtn.setChecked(true);
 		}else{
 			//startService(new Intent(getApplicationContext(), UpdaterService.class));
-			startServiceBtn.setText("Start updater service");
+			startServiceBtn.setText(mPhoneNumber);
 			startServiceBtn.setChecked(false);
 		}
 		startServiceBtn.setOnClickListener(new OnClickListener() {
 		
 			@Override
 			public void onClick(View v) {
+				
+		    	 
 				// TODO Auto-generated method stub
 				if(isMyServiceRunning()){
 					stopService(new Intent(getApplicationContext(), UpdaterService.class));
-					startServiceBtn.setText("Start updater service");
+					startServiceBtn.setText("zkouska");
 					startServiceBtn.setActivated(false);
 				}else{
 					startService(new Intent(getApplicationContext(), UpdaterService.class));
@@ -99,7 +117,10 @@ public class DataDisplayActivity extends Activity {
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
+		FourierHelper.removeOnContextCountedListener(this);
+
 		super.onDestroy();
+		
 	}
 	
 	private void updateStateUI(Intent intent){
@@ -107,10 +128,10 @@ public class DataDisplayActivity extends Activity {
 		String contextString;
 		int context = intent.getIntExtra("context", 0);
 		switch (context) {
-		case FourierHelper.CAR:
+		case MotionContextHelper.CAR:
 			contextString = getResources().getString(R.string.context_car);
 			break;
-		case FourierHelper.WALKING:
+		case MotionContextHelper.WALKING:
 			contextString = getResources().getString(R.string.context_walking);
 		default:
 			contextString = getResources().getString(R.string.context_none);
@@ -123,7 +144,7 @@ public class DataDisplayActivity extends Activity {
 	    ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
 	    for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
 	    	Log.d("buuuu",service.service.getClassName());
-	        if ("com.simekadam.blindassistant.UpdaterService".equals(service.service.getClassName())) {
+	        if ("com.simekadam.blindassistant.services.UpdaterService".equals(service.service.getClassName())) {
 	            return true;
 	        }
 	    }
@@ -194,7 +215,7 @@ public class DataDisplayActivity extends Activity {
         	if(intent.getAction().equals("com.simekadam.blindassistant.UPDATE_CONTEXT_UI")){
         		//try{
         		updateStateUI(intent);   
-            	updatePlot(intent);
+            	//updatePlot(intent);
         		//}
         		//catch(Exception ex){
         		//	Log.d(TAG, ex.toString());
@@ -222,16 +243,13 @@ public class DataDisplayActivity extends Activity {
 		
 	}
     
-    public void updatePlot(Intent intent){
+    public void updatePlot(float[] f, float[] h){
     	
     	LinkedList<Number> list = new LinkedList<Number>();
     	LinkedList<Number> list2 = new LinkedList<Number>();
-    	float[] f = intent.getFloatArrayExtra("vectors");
-    	Log.d(TAG, f.length+" ");
     	for (float g : f) {
 			list.add((Number)g);
 		}
-    	float[] h = intent.getFloatArrayExtra("counted");
     	for (float g : h) {
 			list2.add((Number)g);
 		}
@@ -242,6 +260,51 @@ public class DataDisplayActivity extends Activity {
 
 
     }
+
+	@Override
+	public void contextCounted(ArrayList<Float> outputData, int context, int intent) {
+		notify("Context's been counted ("+intent+")", context+"");
+	}
+	
+	private void notify(String title, String text){
+		datadisplayintent = PendingIntent.getActivity(getApplicationContext(),
+				0, new Intent(getApplicationContext(),
+						DataDisplayActivity.class),
+				PendingIntent.FLAG_UPDATE_CURRENT);
+
+		RemoteViews contentView = new RemoteViews(getPackageName(),
+				R.layout.contextnotificationlayout);
+		contentView.setImageViewResource(R.id.notificationimage,
+				R.drawable.icon_simple);
+		contentView.setTextViewText(R.id.title, title);
+		contentView.setTextViewText(R.id.text, text);
+
+		Notification notification = new Notification(R.drawable.statusbar_icon,
+				"Context change", System.currentTimeMillis());
+		notification.contentView = contentView;
+		notification.contentIntent = datadisplayintent;
+		notification.flags |= Notification.FLAG_AUTO_CANCEL;
+		notification.defaults |= Notification.DEFAULT_SOUND;
+		notification.defaults |= Notification.DEFAULT_VIBRATE;
+		mNotificationManager.notify(42, notification);
+	}
+
+	@Override
+	public void contextCounted(ArrayList<Float> outputData,
+			ArrayList<Float> inputData, int context, int intent) {
+		
+		// TODO Auto-generated method stub
+				float outputValues[] = new float[outputData.size()];
+				for (int iter = 0; iter < outputData.size(); iter++) {
+					outputValues[iter] = (float) outputData.get(iter);
+				}
+				float vectors[] = new float[inputData.size()];
+				for (int iter = 0; iter < inputData.size(); iter++) {
+					vectors[iter] = (float) inputData.get(iter);
+				}
+				updatePlot(vectors, outputValues);
+		
+	}
     
    
 

@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class DatabaseAdapter {
 
@@ -17,11 +18,17 @@ public class DatabaseAdapter {
 	public static final String KEY_X = "x";
 	public static final String KEY_Y = "y";
 	public static final String KEY_Z = "z";
-	public static final String KEY_FOURIER_MAX = "fourierMax";
-	public static final String KEY_FOURIER_FREQ = "fourierFreq";
+	private static final String KEY_FOURIER_MAX = "fourierMax";
+	private static final String KEY_FOURIER_FREQ = "fourierFreq";
+	private static final String KEY_GPS_LAT = "latitude";
+	private static final String KEY_GPS_LON = "longitude";
+	private static final String KEY_GPS_TIME = "time";
+
+
 	
 	private static final String ACCELEROMETER_TABLE = "accelerometer";
 	private static final String FOURIER_TABLE = "fourier";
+	private static final String GPS_TABLE = "gpsData";
 	private Context context;
 	private SQLiteDatabase database;
 	private SqlLiteHelper dbHelper;
@@ -58,10 +65,18 @@ public class DatabaseAdapter {
 		return database.insert(FOURIER_TABLE, null, values);
 	}
 	
-	public long addPositionData(){
+	public long addPositionData(double latitude, double longitude, long time){
 		ContentValues values = new ContentValues();
-		
-		return 1;
+		values.put(KEY_GPS_LAT, latitude);
+		values.put(KEY_GPS_LON, longitude);
+		values.put(KEY_GPS_TIME, time);
+		try{
+		return database.insert(GPS_TABLE, null, values);
+		}
+		catch(Exception ex){
+			Log.d(this.getClass().getSimpleName(), ex.toString());
+			return 0;
+		}
 	}
 	
 	
@@ -92,7 +107,8 @@ public class DatabaseAdapter {
 			"(_id integer primary key autoincrement, "
 			+ "time long, vector float, x float, y float, z float);";
 		private static final String FOURIER_TABLE_CREATE =	"create table fourier (_id integer primary key autoincrement,fourierMax float, fourierFreq float, context text, time integer)";
-
+		private static final String GPS_TABLE_CREATE = "create table gpsData (_id integer primary key autoincrement,latitude double, longitude double, time long)";
+		
 		public SqlLiteHelper(Context context) {
 			super(context, DATABASE_NAME, null, DATABASE_VERSION);
 			// TODO Auto-generated constructor stub
@@ -102,6 +118,7 @@ public class DatabaseAdapter {
 		public void onCreate(SQLiteDatabase db) {
 			db.execSQL(ACCELEROMETER_TABLE_CREATE);
 			db.execSQL(FOURIER_TABLE_CREATE);
+			db.execSQL(GPS_TABLE_CREATE);
 		}
 
 		@Override

@@ -1,9 +1,11 @@
 package com.simekadam.blindassistant.activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.simekadam.blindassistant.helpers.SpeechHelper.OnSpeechEndedListener;
@@ -18,6 +20,8 @@ public class BlindAssistantStartupActivity extends Activity {
 		Intent checkIntent = new Intent();
 		checkIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
     	this.startActivityForResult(checkIntent, MY_DATA_CHECK_CODE);
+    	
+    	  
 		super.onCreate(savedInstanceState);
 		
 	}
@@ -33,6 +37,7 @@ public class BlindAssistantStartupActivity extends Activity {
 					
 					@Override
 					public void speechEnded() {
+						
 						// TODO Auto-generated method stub
 						Intent startApp = new Intent(getApplicationContext(),BlindAssistantActivity.class);
 			        	startActivity(startApp);
