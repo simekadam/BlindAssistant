@@ -1,5 +1,6 @@
 package com.simekadam.blindassistant.services;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,6 +19,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.location.Location;
@@ -32,6 +34,8 @@ import android.widget.RemoteViews;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.simekadam.blindassistant.R;
+import com.simekadam.blindassistant.activities.BlindAssistantActivity;
+import com.simekadam.blindassistant.activities.BlindAssistantStartupActivity;
 import com.simekadam.blindassistant.activities.DataDisplayActivity;
 import com.simekadam.blindassistant.helpers.DatabaseAdapter;
 import com.simekadam.blindassistant.helpers.FourierHelper;
@@ -70,6 +74,7 @@ public class UpdaterService extends Service implements
 	private boolean loggingActive = false;
 	private static int steadyCounter = 0;
 	private static int motionCounter = 0;
+	private String user;
 	@Override
 	public void onCreate() {
 		// TODO Auto-generated method stub
@@ -81,6 +86,16 @@ public class UpdaterService extends Service implements
 	@Override
 	public void onStart(Intent intent, int startId) {
 		// TODO Auto-generated method stub
+		SharedPreferences sp = getSharedPreferences(
+				"com.simekadam.blindassistant", Context.MODE_PRIVATE);
+		if(sp.getBoolean("logged", false)){
+			this.user = sp.getString("userID", "");
+			if(this.user == ""){
+				redirectToLogin();
+			}
+		}else{
+			redirectToLogin();
+		}
 		Log.d(TAG, "started");
 		super.onStart(intent, startId);
 		String ns = Context.NOTIFICATION_SERVICE;
@@ -182,9 +197,9 @@ public class UpdaterService extends Service implements
 		unregisterReceiver(updaterServiceBroadcastReceiver);
 	}
 
-	public void sendDataToServer() {
+	public void sendDataToServer(RequestParams params) {
 		Log.d(TAG, "trying to send data to server");
-		ServerClient.get("http://www.google.cz", null,
+		ServerClient.post("http://www.jssport-giant.cz/android/index.php", params,
 				new AsyncHttpResponseHandler() {
 					@Override
 					public void onFailure(Throwable arg0) {
@@ -213,63 +228,7 @@ public class UpdaterService extends Service implements
 					}
 				});
 
-		NameValuePair np = new BasicNameValuePair("output",
-				jsonObject.toString());
-		NameValuePair np2 = new BasicNameValuePair("input",
-				mJSONArray2.toString());
-		NameValuePair np3 = new BasicNameValuePair("time",
-				System.currentTimeMillis() + "");
-		Log.d("location", currentLocation.toString());
-		NameValuePair np4 = new BasicNameValuePair("location",
-				currentLocation.toString());
-		List<NameValuePair> nplist = new ArrayList<NameValuePair>();
-		nplist.add(np);
-		nplist.add(np2);
-		nplist.add(np3);
-		nplist.add(np4);
-
-		RequestParams params = new RequestParams();
-
-		params.put("output", jsonObject.toString());
-		params.put("input", mJSONArray2.toString());
-		params.put("time", System.currentTimeMillis() + "");
-		params.put("location", currentLocation.toString());
-
-		ServerClient.post("http://www.jssport-giant.cz/android/index.php",
-				params, new AsyncHttpResponseHandler() {
-
-					@Override
-					public void onFailure(Throwable arg0) {
-						// TODO Auto-generated method stub
-						Log.d("httpzkouska", arg0.toString());
-						super.onFailure(arg0);
-					}
-
-					@Override
-					public void onFinish() {
-						// TODO Auto-generated method stub
-						super.onFinish();
-					}
-
-					@Override
-					public void onStart() {
-						// TODO Auto-generated method stub
-						super.onStart();
-					}
-
-					@Override
-					public void onSuccess(String arg0) {
-						// TODO Auto-generated method stub
-						Log.d("httpzkouska", arg0);
-						super.onSuccess(arg0);
-					}
-
-				});
-		// HttpResponse responsePOST = client.execute(post);
-		// HttpEntity resEntity = responsePOST.getEntity();
-		// if (resEntity != null) {
-
-		// }
+		
 
 	}
 
@@ -279,7 +238,7 @@ public class UpdaterService extends Service implements
 
 	private void startGPS() {
 		LocationHelper.getLocationHelper(getApplicationContext())
-				.registerLocationUpdates(10000);
+				.registerLocationUpdates(5000);
 	}
 
 	private void stopGPS() {
@@ -370,6 +329,12 @@ public class UpdaterService extends Service implements
 		notification.defaults |= Notification.DEFAULT_VIBRATE;
 		mNotificationManager.notify(42, notification);
 	}
+	
+	private void redirectToLogin(){
+		Intent loginIntent = new Intent(getApplicationContext(),
+				BlindAssistantStartupActivity.class);
+		startActivity(loginIntent);
+	}
 
 	private BroadcastReceiver updaterServiceBroadcastReceiver = new BroadcastReceiver() {
 		@Override
@@ -408,7 +373,7 @@ public class UpdaterService extends Service implements
 				// // // wifi connection was lost
 				// // }
 
-				sendDataToServer();
+				//sendDataToServer();
 				Log.d("xxxx", "wifitoggle");
 			}
 		}
@@ -428,6 +393,17 @@ public class UpdaterService extends Service implements
 		// ulozit do DB
 		notify("Ukladam polohu", "lat: "+latitude+", lon: "+longitude);
 		database.addPositionData(latitude, longitude, time);
+		if(true){
+			RequestParams params = new RequestParams();
+			Timestamp timestamp = Timestamp.valueOf(time+"");
+			params.put("batch", "0");
+			params.put("latitude", latitude+"");
+			params.put("longitude", longitude+"");
+			params.put("user", this.user);
+			params.put("time", timestamp.toString());
+			sendDataToServer(params);
+			
+		}
 		Log.d(TAG, "ukladam do DB");
 	}
 

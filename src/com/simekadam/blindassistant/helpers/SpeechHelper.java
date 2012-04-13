@@ -1,7 +1,9 @@
 package com.simekadam.blindassistant.helpers;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import android.content.Context;
 import android.sax.StartElementListener;
@@ -21,7 +23,6 @@ public class SpeechHelper implements OnInitListener, OnUtteranceCompletedListene
 	public static final String UI_RESPONSE_WITH_CALLBACK = "uiCallback";
 	
 	private SpeechHelper(){
-		
 	}
 	
 	
@@ -80,8 +81,8 @@ public class SpeechHelper implements OnInitListener, OnUtteranceCompletedListene
         	Log.v("utteranceId", utteranceId);
         	if(utteranceId.equals(UI_RESPONSE_WITH_CALLBACK)){
         		Log.v("speech", "SpeechEndedListener called");
-        	
-        	onSpeechEndedListener.speechEnded();
+        		this.onSpeechEndedListener.speechEnded();
+        		
         	}
         }
     	
@@ -93,12 +94,17 @@ public class SpeechHelper implements OnInitListener, OnUtteranceCompletedListene
 	
 
 	public OnSpeechEndedListener getOnSpeechEndedListener() {
-		return onSpeechEndedListener;
+		return this.onSpeechEndedListener;
 	}
 
 
 	public void setOnSpeechEndedListener(OnSpeechEndedListener onSpeechEndedListener) {
 		this.onSpeechEndedListener = onSpeechEndedListener;
+		
+	}
+	
+	public void removeOnSpeechEndedListener(){
+		this.onSpeechEndedListener = null;
 	}
 	
 }

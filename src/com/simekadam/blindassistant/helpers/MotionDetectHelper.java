@@ -40,14 +40,14 @@ public class MotionDetectHelper implements SensorEventListener{
 	public void startMotionDetection(){
 		Log.d(TAG, "motion detection has been started");
 
-		sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+		sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI);
 	}
 	
 	public void startMotionDetection(MotionDetectListener mdl){
 		Log.d(TAG, "motion detection has been started");
 
 		addMotionDetectListener(mdl);
-		sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+		sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI);
 		
 	}
 	public void stopMotionDetection(){

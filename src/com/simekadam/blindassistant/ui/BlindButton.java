@@ -89,15 +89,18 @@ public class BlindButton extends Button implements OnClickListener, OnTouchListe
     }
 
     private static void checkEdges(float x, float y){
-  	  
+  	  if(x < 10 || x > width-10 || y < 10 || y > height-10){
+  		vibrator.vibrate(200);
+  	  }else{
   	  int touchedIndex = (int) (Math.floor(x/leftFactor) + (Math.floor( y / topFactor ) * 2));
   	  Log.v("toucheIndex", touchedIndex+"");
   	  if(currentlyTouched == -1) currentlyTouched = touchedIndex;
-  	  else if(currentlyTouched != touchedIndex){
+  	  else if(touchedIndex < 6 && currentlyTouched != touchedIndex){
   		  vibrator.vibrate(100);
   		  BlindButton.onHoverListener.onHover(touchedIndex);
   		 
   		  currentlyTouched = touchedIndex;
+  	  }
   	  }
     }
     
