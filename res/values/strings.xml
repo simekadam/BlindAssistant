@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="hello">Hello World, BlindGuardianActivity!</string>
-    <string name="app_name">BlindGuardian</string>
+    <string name="hello">Hello World, BlindAssistantActivity!</string>
+    <string name="app_name">Blind Assistant</string>
     <string name="StartUpdaterService">Start Updater Service</string>
     <string name="userContext">User Context</string>
     <string name="BlindAssistant">Blind Assistant</string>
@@ -10,5 +10,6 @@
     <string name="context_car">car</string>
     <string name="context_walking">walking</string>
     <string name="context_none">undefined</string>
+    <string name="nullAction">Žádná akce</string>
 
 </resources>

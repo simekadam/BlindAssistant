@@ -1,34 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
-
-    <TextView
-        android:id="@+id/context"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:text="@string/userContext" />
-
-    <TextView
-        android:id="@+id/contextLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginRight="14dp"
-        android:text="@string/userContext"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <ToggleButton
-        android:id="@+id/toggleUpdaterService"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="29dp"
-        android:text="@string/toggleUpdaterService"
-        android:textOff="Start Updater Service" />
+    android:layout_height="match_parent"
+    android:layout_marginLeft="20px"
+    android:layout_marginRight="20px"
+    android:gravity="fill_vertical" >
 
     <ScrollView
         android:id="@+id/scrollView1"
@@ -59,5 +35,90 @@
                 title="Accelerometer data for each 5s" />
         </LinearLayout>
     </ScrollView>
+
+    <TextView
+        android:id="@+id/maxLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:text="Domain"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/freqLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/maxLabel"
+        android:layout_marginTop="16dp"
+        android:text="Frequency"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/contextLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:text="@string/userContext"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/max"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/freqLabel"
+        android:layout_alignTop="@+id/maxLabel"
+        android:layout_toLeftOf="@+id/contextLabel"
+        android:text="0"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/frequency"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/freqLabel"
+        android:layout_alignBottom="@+id/freqLabel"
+        android:layout_alignLeft="@+id/max"
+        android:layout_toLeftOf="@+id/contextLabel"
+        android:text="0"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/coefficientLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/freqLabel"
+        android:layout_marginTop="25dp"
+        android:text="Coefficient"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/coefficient"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/coefficientLabel"
+        android:layout_alignLeft="@+id/frequency"
+        android:text="0"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/context"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/contextLabel"
+        android:layout_alignBottom="@+id/contextLabel"
+        android:layout_alignRight="@+id/maxLabel"
+        android:layout_marginRight="14dp"
+        android:text="@string/userContext" />
+
+    <ToggleButton
+        android:id="@+id/toggleUpdaterService"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/scrollView1"
+        android:layout_toRightOf="@+id/freqLabel"
+        android:text="@string/toggleUpdaterService"
+        android:textOff="Start Updater Service" />
 
 </RelativeLayout>

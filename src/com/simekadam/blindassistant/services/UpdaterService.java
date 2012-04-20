@@ -1,16 +1,13 @@
 package com.simekadam.blindassistant.services;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -34,11 +31,9 @@ import android.widget.RemoteViews;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.simekadam.blindassistant.R;
-import com.simekadam.blindassistant.activities.BlindAssistantActivity;
 import com.simekadam.blindassistant.activities.BlindAssistantStartupActivity;
 import com.simekadam.blindassistant.activities.DataDisplayActivity;
 import com.simekadam.blindassistant.helpers.DatabaseAdapter;
-import com.simekadam.blindassistant.helpers.FourierHelper;
 import com.simekadam.blindassistant.helpers.LocationHelper;
 import com.simekadam.blindassistant.helpers.MotionContextHelper;
 import com.simekadam.blindassistant.helpers.MotionDetectHelper;
@@ -53,16 +48,19 @@ public class UpdaterService extends Service implements
 
 	private static final String TAG = UpdaterService.class.getSimpleName();
 	public static final String BROADCAST_MOVING_STATE_UPDATE = "com.simekadam.blindassistant.updatestate";
-
+	private int intervals[] = {5,10,15,20};
+	private int currentInterval = 0;
 	private DatabaseAdapter database;
 	private SensorManager mSensorManager;
-
+	private boolean motionDetected = false;
+	private static final int requestCode = 0100;
 	NotificationManager mNotificationManager;
 	private Intent stateUpdateIntent;
 	private Intent updateGPSValuesIntent;
 	private float[] vectors;
 	private float[] outputValues;
 	private LocationManager locationManager;
+	public static final String START_SERVICE = "start";
 	private JSONArray mJSONArray;
 	private JSONArray mJSONArray2;
 	private JSONObject jsonObject;
@@ -75,6 +73,8 @@ public class UpdaterService extends Service implements
 	private static int steadyCounter = 0;
 	private static int motionCounter = 0;
 	private String user;
+	private Location lastKnownLocation;
+	private Handler motionControlHandler;
 	@Override
 	public void onCreate() {
 		// TODO Auto-generated method stub
@@ -100,11 +100,11 @@ public class UpdaterService extends Service implements
 		super.onStart(intent, startId);
 		String ns = Context.NOTIFICATION_SERVICE;
 		mNotificationManager = (NotificationManager) getSystemService(ns);
-
+		
 		startMotionDetection();
 		
 		openDatabase();
-
+		scheduleDetection();
 		registerWifiConnectionCallback();
 	}
 
@@ -119,6 +119,7 @@ public class UpdaterService extends Service implements
 		stopLocationLogging();
 		stopMotionDetection();
 		unregisterWifiConnectionCallback();
+		motionControlHandler.removeMessages(MotionDetectHelper.SCHEDULE_DETECTION);
 		super.onDestroy();
 	}
 
@@ -195,6 +196,7 @@ public class UpdaterService extends Service implements
 
 	private void unregisterWifiConnectionCallback() {
 		unregisterReceiver(updaterServiceBroadcastReceiver);
+		
 	}
 
 	public void sendDataToServer(RequestParams params) {
@@ -285,26 +287,26 @@ public class UpdaterService extends Service implements
 	
 
 	private void notify(int context) {
-		datadisplayintent = PendingIntent.getActivity(getApplicationContext(),
-				0, new Intent(getApplicationContext(),
-						DataDisplayActivity.class),
-				PendingIntent.FLAG_UPDATE_CURRENT);
-
-		RemoteViews contentView = new RemoteViews(getPackageName(),
-				R.layout.contextnotificationlayout);
-		contentView.setImageViewResource(R.id.notificationimage,
-				R.drawable.icon_simple);
-		contentView.setTextViewText(R.id.title, "Context change");
-		contentView.setTextViewText(R.id.text, "You are now " + context);
-
-		Notification notification = new Notification(R.drawable.statusbar_icon,
-				"Context change", System.currentTimeMillis());
-		notification.contentView = contentView;
-		notification.contentIntent = datadisplayintent;
-		notification.flags |= Notification.FLAG_AUTO_CANCEL;
-		notification.defaults |= Notification.DEFAULT_SOUND;
-		notification.defaults |= Notification.DEFAULT_VIBRATE;
-		mNotificationManager.notify(42, notification);
+//		datadisplayintent = PendingIntent.getActivity(getApplicationContext(),
+//				0, new Intent(getApplicationContext(),
+//						DataDisplayActivity.class),
+//				PendingIntent.FLAG_UPDATE_CURRENT);
+//
+//		RemoteViews contentView = new RemoteViews(getPackageName(),
+//				R.layout.contextnotificationlayout);
+//		contentView.setImageViewResource(R.id.notificationimage,
+//				R.drawable.icon_simple);
+//		contentView.setTextViewText(R.id.title, "Context change");
+//		contentView.setTextViewText(R.id.text, "You are now " + context);
+//
+//		Notification notification = new Notification(R.drawable.statusbar_icon,
+//				"Context change", System.currentTimeMillis());
+//		notification.contentView = contentView;
+//		notification.contentIntent = datadisplayintent;
+//		notification.flags |= Notification.FLAG_AUTO_CANCEL;
+//		notification.defaults |= Notification.DEFAULT_SOUND;
+//		notification.defaults |= Notification.DEFAULT_VIBRATE;
+//		mNotificationManager.notify(42, notification);
 	}
 	
 	private void notify(String title, String text){
@@ -339,6 +341,7 @@ public class UpdaterService extends Service implements
 	private BroadcastReceiver updaterServiceBroadcastReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
+			Log.d(TAG, "received");
 			if (intent.getAction().equals(
 					WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION)) {
 				// String ns = Context.NOTIFICATION_SERVICE;
@@ -391,11 +394,11 @@ public class UpdaterService extends Service implements
 		Log.d(TAG, "speed: "+velocity);
 		
 		// ulozit do DB
-		notify("Ukladam polohu", "lat: "+latitude+", lon: "+longitude);
-		database.addPositionData(latitude, longitude, time);
-		if(true){
+		//notify("Ukladam polohu", "lat: "+latitude+", lon: "+longitude);
+		database.addPositionData(latitude, longitude, time, this.user);
+		if(false){
 			RequestParams params = new RequestParams();
-			Timestamp timestamp = Timestamp.valueOf(time+"");
+			Timestamp timestamp = new Timestamp(time);
 			params.put("batch", "0");
 			params.put("latitude", latitude+"");
 			params.put("longitude", longitude+"");
@@ -411,7 +414,14 @@ public class UpdaterService extends Service implements
 	@Override
 	public void contextAlert(int context) {
 		MotionContextHelper.getMotionContextHelper(getApplicationContext()).stopContextResolve(this);
-		notify(context);
+		LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        SharedPreferences sp = getSharedPreferences(
+				"com.simekadam.blindassistant", Context.MODE_PRIVATE);
+        if(lastKnownLocation == null){
+        	lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+        }
+		database.addActionData(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude(), System.currentTimeMillis(), context, sp.getString("userID", "undefined"));
 		switch (context) {
 		case MotionContextHelper.WALKING:
 			startLocationLogging();
@@ -422,6 +432,8 @@ public class UpdaterService extends Service implements
 			MotionContextHelper.getMotionContextHelper(getApplicationContext()).stopContextResolve(this);
 			Log.d(TAG, "location monitoring has been stopped");
 			startMotionDetection();
+			scheduleDetection();
+			motionDetected = false;
 			break;
 		}
 
@@ -430,17 +442,21 @@ public class UpdaterService extends Service implements
 	@Override
 	public void MotionDetected() {
 		// TODO Auto-generated method stub
+		
+		motionDetected = true;
 		steadyCounter = 0;
 		if(++motionCounter > 3 && !loggingActive){
+			motionControlHandler.removeMessages(MotionDetectHelper.SCHEDULE_DETECTION);
 			motionCounter = 0;
 			MotionContextHelper.getMotionContextHelper(getApplicationContext()).startContextResolve(this);
 			pauseMotionDetection();
 		}else{
-		startMotionDetection();
+		//startMotionDetection();
 		}
 	}
 	
 	public void SteadyDetected(){
+		
 		motionCounter = 0;
 		if(++steadyCounter>3 && loggingActive){
 			steadyCounter = 0;
@@ -448,9 +464,60 @@ public class UpdaterService extends Service implements
 			pauseMotionDetection();
 		}
 		else{
-			startMotionDetection();
+			//startMotionDetection();
 
 		}
 	}
+	
+	private void scheduleDetection(){
+		motionControlHandler = new Handler(){
+			@Override
+            public void handleMessage(Message msg)
+            {
+				if(msg.arg1 == MotionDetectHelper.SCHEDULE_DETECTION){
+					if(motionDetected){
+						Log.d(TAG, "motion was detected, not stopping now");
+						currentInterval = 0;
+						msg = Message.obtain();
+						msg.arg1 = MotionDetectHelper.SCHEDULE_DETECTION;
+						motionControlHandler.removeMessages(MotionDetectHelper.SCHEDULE_DETECTION);
+						motionControlHandler.sendMessageDelayed(msg, 5000);
+						//motionDetected = false;
+					}else{
+						currentInterval++;
+						if(currentInterval<intervals.length){
+							currentInterval = intervals.length-1;
+						}
+						scheduleStart(currentInterval);
+						Log.d(TAG, "stoppped for "+currentInterval);
+							stopService(new Intent(getApplicationContext(), UpdaterService.class));
+							
+					}
+				}
+            }
+			
+            
+		};
+		Message msg = Message.obtain();
+		msg.arg1 = MotionDetectHelper.SCHEDULE_DETECTION;
+		motionControlHandler.sendMessageDelayed(msg,  5000);
+		
+	}
+	
+	private void scheduleStart(int interval){
+		// get a Calendar object with current time
+				 Calendar cal = Calendar.getInstance();
+				 // add 5 minutes to the calendar object
+				 cal.add(Calendar.SECOND, 300);
+				 Intent intent = new Intent(UpdaterService.START_SERVICE);
+				 intent.setAction(UpdaterService.START_SERVICE);
+				 PendingIntent sender = PendingIntent.getBroadcast(this, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+				 
+				 // Get the AlarmManager service
+				 AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+				 am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), sender);
+	}
+	
+	
 
 }

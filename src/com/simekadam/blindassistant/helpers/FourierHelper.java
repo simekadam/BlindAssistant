@@ -34,7 +34,7 @@ public class FourierHelper {
 	private static float[] outputData;
 	private static float freq;
 	private static float max;
-	private static boolean processing = false;
+	public static boolean processing = false;
 	private static ArrayList<ContextCountedListener> ccListeners = new ArrayList<ContextCountedListener>();
 
 	public static void processFourierData(Message msg) {
@@ -60,17 +60,18 @@ public class FourierHelper {
 				ContextCountedListener ccl = listenerIterator.next();
 				switch (msg.arg1) {
 				case MotionContextHelper.COUNT_CONTEXT_FOREGROUND:
-					ccl.contextCounted(output, input, context, msg.arg1);
+					ccl.contextCounted(output, input, context, msg.arg1, freq, max);
 
 					break;
 
 				default:
-					ccl.contextCounted(output, context, msg.arg1);
+					ccl.contextCounted(output, input, context, msg.arg1, freq, max);
+
 					break;
 				}
 				// ccl.conte
 			}
-		
+			processing = false;
 
 	}
 
@@ -82,7 +83,7 @@ public class FourierHelper {
 		double coefficient = freq * max;
 		int context;
 		Log.d(TAG, "frequency: "+freq+" max: "+max);
-		if (coefficient < 600 && coefficient > 100) {
+		if (coefficient < 800 && coefficient > 100) {
 			context = MotionContextHelper.WALKING;
 		} else {
 			context = MotionContextHelper.STEADY;

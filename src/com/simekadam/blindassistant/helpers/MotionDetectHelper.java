@@ -1,12 +1,16 @@
 package com.simekadam.blindassistant.helpers;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
 
 import com.simekadam.blindassistant.interfaces.ContextAlertListener;
 import com.simekadam.blindassistant.interfaces.MotionDetectListener;
+import com.simekadam.blindassistant.services.UpdaterService;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -16,12 +20,12 @@ import android.util.Log;
 public class MotionDetectHelper implements SensorEventListener{
 
 	private static final String TAG = MotionDetectHelper.class.getSimpleName();
+	public static final int SCHEDULE_DETECTION = 0101;
 	private static MotionDetectHelper instance;
 	
-	
+	private boolean isDetecting = false;
 	private SensorManager sensorManager;
 	private Sensor accelerometer;
-	
 	private ArrayList<MotionDetectListener> motionDetectListeners;
 	
 	private MotionDetectHelper(Context context){
@@ -40,18 +44,20 @@ public class MotionDetectHelper implements SensorEventListener{
 	public void startMotionDetection(){
 		Log.d(TAG, "motion detection has been started");
 
-		sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI);
+		sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
 	}
 	
 	public void startMotionDetection(MotionDetectListener mdl){
 		Log.d(TAG, "motion detection has been started");
-
+		
 		addMotionDetectListener(mdl);
-		sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI);
+		sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+		this.isDetecting = true;
 		
 	}
 	public void stopMotionDetection(){
 		sensorManager.unregisterListener(this);
+		this.isDetecting = false;
 	}
 	
 	@Override
@@ -91,22 +97,21 @@ public class MotionDetectHelper implements SensorEventListener{
 				double test =  Math.sqrt(result[0]*result[0]+result[1]*result[1]+result[2]*result[2]);
 						
 				float vector = (float) test;
-				
 				motionAssertion(vector);
 	}
 	
 	private void motionAssertion(float vector){
 		if(vector > 4){
-			stopMotionDetection();
-			Log.d(TAG, "motion detected "+vector);
+			//stopMotionDetection();
+		//	Log.d(TAG, "motion detected "+vector);
 			Iterator<MotionDetectListener> iterator = motionDetectListeners.iterator();
 			while(iterator.hasNext()){
 				iterator.next().MotionDetected();
 			}
 			
 		}else if(vector < 0.4){
-			stopMotionDetection();
-			Log.d(TAG, "steady detected "+vector);
+			//stopMotionDetection();
+		//	Log.d(TAG, "steady detected "+vector);
 			Iterator<MotionDetectListener> iterator = motionDetectListeners.iterator();
 			while(iterator.hasNext()){
 				iterator.next().SteadyDetected();
@@ -125,6 +130,9 @@ public class MotionDetectHelper implements SensorEventListener{
 	public void removeMotionDetectListener(MotionDetectListener mdl){
 		this.motionDetectListeners.remove(mdl);
 	}
+	
+	
+	
 
 	
 	

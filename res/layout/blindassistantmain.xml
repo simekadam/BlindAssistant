@@ -28,15 +28,15 @@ android:focusableInTouchMode="true"
     <LinearLayout
         android:id="@+id/tableRow1"
         android:layout_width="fill_parent"
-        android:layout_height="50dip"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.3"
         android:orientation="horizontal" >
 
         <com.simekadam.blindassistant.ui.BlindButton
             android:id="@+id/firstButton"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_margin="0dip"
+            android:layout_margin="0dp"
             android:layout_weight="1" >
         </com.simekadam.blindassistant.ui.BlindButton>
 
@@ -44,14 +44,14 @@ android:focusableInTouchMode="true"
             android:id="@+id/secondButton"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_margin="0dip"
+            android:layout_margin="0dp"
             android:layout_weight="1" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="50dip"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.3"
         android:orientation="horizontal" >
 
         <com.simekadam.blindassistant.ui.BlindButton
@@ -69,8 +69,8 @@ android:focusableInTouchMode="true"
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="50dip"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.3"
         android:orientation="horizontal" >
 
         <com.simekadam.blindassistant.ui.BlindButton
@@ -84,6 +84,24 @@ android:focusableInTouchMode="true"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="1" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.1"
+        android:orientation="horizontal" >
+
+        <com.simekadam.blindassistant.ui.BlindButton
+            android:id="@+id/seventhButton"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1" />
+
+<!--         <com.simekadam.blindassistant.ui.BlindButton -->
+<!--             android:id="@+id/sixthButton" -->
+<!--             android:layout_width="fill_parent" -->
+<!--             android:layout_height="150dp" -->
+<!--             android:layout_weight="1" /> -->
     </LinearLayout>
 
 </com.simekadam.blindassistant.ui.BlindTableLayout>

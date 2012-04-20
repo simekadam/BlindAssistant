@@ -1,5 +1,7 @@
 package com.simekadam.blindassistant.ui;
 
+import com.simekadam.blindassistant.helpers.SpeechHelper;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -72,14 +74,21 @@ public class BlindGridView extends GridView implements OnTouchListener, android.
 	  
 	  
 	  private void checkEdges(float x, float y){
-		  
+		  if (x < 10 || x > width - 10 || y < 10 || y > topFactor * 3) {
+				vibrator.vibrate(200);
+			} else {
 		  int touchedIndex = (int) (Math.floor(x/leftFactor) + (Math.floor( y / topFactor ) * 2));
-		  Log.v("toucheIndex", touchedIndex+"");
 		  if(currentlyTouched == -1) currentlyTouched = touchedIndex;
-		  if(currentlyTouched != touchedIndex){
+		  else if(currentlyTouched != touchedIndex){
 			  vibrator.vibrate(100);
+			  BlindButton btn = (BlindButton) this.getChildAt(touchedIndex);
+			  Log.v("test", btn+"test");
+			  SpeechHelper.getInstance().say(btn.getSpeechLabel(), getContext(), SpeechHelper.UI_RESPONSE);
 			  currentlyTouched = touchedIndex;
-		  }
+		  }}
+		  
+		  
+		
 		  
 	  }
 

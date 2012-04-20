@@ -54,7 +54,9 @@ public class BlindAssistantActivity extends Activity{
 			
 			@Override
 			public void onDoubleClick() {
-				startActivity(new Intent(getApplicationContext(), BlindSettingsActivity.class));
+				Intent settingsIntent = new Intent(getApplicationContext(), BlindSettingsActivity.class);
+				settingsIntent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
+				startActivity(settingsIntent);
 				
 			}
 		});

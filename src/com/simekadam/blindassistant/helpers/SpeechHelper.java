@@ -21,7 +21,7 @@ public class SpeechHelper implements OnInitListener, OnUtteranceCompletedListene
 	public static final String STANDARD_MSG = "standardMsg";
 	public static final String UI_RESPONSE = "uiResponse";
 	public static final String UI_RESPONSE_WITH_CALLBACK = "uiCallback";
-	
+	private static HashMap<String, String> map;
 	private SpeechHelper(){
 	}
 	
@@ -29,6 +29,8 @@ public class SpeechHelper implements OnInitListener, OnUtteranceCompletedListene
 	public static SpeechHelper getInstance(){
 		if(helper == null){
 			helper = new SpeechHelper();
+			map = new HashMap<String, String>();
+
 		}
 		return helper;
 	}
@@ -38,7 +40,6 @@ public class SpeechHelper implements OnInitListener, OnUtteranceCompletedListene
 	
 	
 	public void say(String text, Context context, String utteranceID){
-		
 		if(mTts == null){
 			this.text = text;
 			
@@ -46,9 +47,15 @@ public class SpeechHelper implements OnInitListener, OnUtteranceCompletedListene
 					
 		}
 		else{
-			HashMap<String, String> map = new HashMap<String, String>();
+			
+			map.clear();
 			map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, utteranceID);
+			try{
 			mTts.speak(text, TextToSpeech.QUEUE_FLUSH, map);
+			}
+			catch(Exception ex){
+				Log.d("speechhelper", ex.toString());
+			}
 		}
 	}
 	
@@ -82,7 +89,6 @@ public class SpeechHelper implements OnInitListener, OnUtteranceCompletedListene
         	if(utteranceId.equals(UI_RESPONSE_WITH_CALLBACK)){
         		Log.v("speech", "SpeechEndedListener called");
         		this.onSpeechEndedListener.speechEnded();
-        		
         	}
         }
     	

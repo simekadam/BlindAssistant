@@ -34,6 +34,7 @@ import com.androidplot.xy.StepFormatter;
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYStepMode;
 import com.simekadam.blindassistant.R;
+import com.simekadam.blindassistant.helpers.DatabaseAdapter;
 import com.simekadam.blindassistant.helpers.FourierHelper;
 import com.simekadam.blindassistant.helpers.MotionContextHelper;
 import com.simekadam.blindassistant.interfaces.ContextCountedListener;
@@ -47,7 +48,6 @@ public class DataDisplayActivity extends Activity implements ContextCountedListe
 	SimpleXYSeries series2;
 	private static PendingIntent datadisplayintent;
 	NotificationManager mNotificationManager;
-
 	XYPlot mySimpleXYPlot;
 	XYPlot mySimpleXYPlot2;
 	@Override
@@ -96,12 +96,12 @@ public class DataDisplayActivity extends Activity implements ContextCountedListe
 				// TODO Auto-generated method stub
 				if(isMyServiceRunning()){
 					stopService(new Intent(getApplicationContext(), UpdaterService.class));
-					startServiceBtn.setText("zkouska");
-					startServiceBtn.setActivated(false);
+					startServiceBtn.setText("Start updater service");
+					//startServiceBtn.setActivated(false);
 				}else{
 					startService(new Intent(getApplicationContext(), UpdaterService.class));
 					startServiceBtn.setText("Stop updater service");
-					startServiceBtn.setActivated(true);
+					//startServiceBtn.setActivated(true);
 				}
 			}
 		});
@@ -267,26 +267,26 @@ public class DataDisplayActivity extends Activity implements ContextCountedListe
 	}
 	
 	private void notify(String title, String text){
-		datadisplayintent = PendingIntent.getActivity(getApplicationContext(),
-				0, new Intent(getApplicationContext(),
-						DataDisplayActivity.class),
-				PendingIntent.FLAG_UPDATE_CURRENT);
+//		datadisplayintent = PendingIntent.getActivity(getApplicationContext(),
+//				0, new Intent(getApplicationContext(),
+//						DataDisplayActivity.class),
+//				PendingIntent.FLAG_UPDATE_CURRENT);
 
-		RemoteViews contentView = new RemoteViews(getPackageName(),
-				R.layout.contextnotificationlayout);
-		contentView.setImageViewResource(R.id.notificationimage,
-				R.drawable.icon_simple);
-		contentView.setTextViewText(R.id.title, title);
-		contentView.setTextViewText(R.id.text, text);
+//		RemoteViews contentView = new RemoteViews(getPackageName(),
+//				R.layout.contextnotificationlayout);
+//		contentView.setImageViewResource(R.id.notificationimage,
+//				R.drawable.icon_simple);
+//		contentView.setTextViewText(R.id.title, title);
+//		contentView.setTextViewText(R.id.text, text);
 
-		Notification notification = new Notification(R.drawable.statusbar_icon,
-				"Context change", System.currentTimeMillis());
-		notification.contentView = contentView;
-		notification.contentIntent = datadisplayintent;
-		notification.flags |= Notification.FLAG_AUTO_CANCEL;
-		notification.defaults |= Notification.DEFAULT_SOUND;
-		notification.defaults |= Notification.DEFAULT_VIBRATE;
-		mNotificationManager.notify(42, notification);
+//		Notification notification = new Notification(R.drawable.statusbar_icon,
+//				"Context change", System.currentTimeMillis());
+//		notification.contentView = contentView;
+//		notification.contentIntent = datadisplayintent;
+//		notification.flags |= Notification.FLAG_AUTO_CANCEL;
+//		notification.defaults |= Notification.DEFAULT_SOUND;
+//		notification.defaults |= Notification.DEFAULT_VIBRATE;
+//		mNotificationManager.notify(42, notification);
 	}
 
 	@Override
@@ -304,6 +304,19 @@ public class DataDisplayActivity extends Activity implements ContextCountedListe
 				}
 				updatePlot(vectors, outputValues);
 		
+	}
+
+	@Override
+	public void contextCounted(ArrayList<Float> outputData,
+			ArrayList<Float> inputData, int context, int intent, float freq,
+			float max) {
+		contextCounted(outputData, inputData, context, intent);
+		TextView freqLabel = (TextView) findViewById(R.id.frequency);
+		freqLabel.setText(freq+"");
+		TextView maxLabel = (TextView) findViewById(R.id.max);
+		maxLabel.setText(max+"");
+		TextView coeffiecient = (TextView) findViewById(R.id.coefficient);
+		coeffiecient.setText((freq*max)+"");
 	}
     
    

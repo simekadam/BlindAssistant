@@ -23,7 +23,8 @@
             android:name=".activities.BlindAssistantActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" 
-            android:theme="@android:style/Theme.DeviceDefault.NoActionBar.Fullscreen">
+            android:theme="@android:style/Theme.DeviceDefault.NoActionBar.Fullscreen"
+            android:keepScreenOn="true">
         </activity>
         <activity
             android:name=".activities.BlindSearchResultActivity"
@@ -44,7 +45,6 @@
             android:name=".activities.BlindAssistantStartupActivity"
             android:icon="@drawable/icon_simple"
             android:label="@string/BlindAssistant"
-            android:launchMode="standard"
             android:theme="@android:style/Theme.DeviceDefault.NoActionBar.Fullscreen" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -57,10 +57,18 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
         <activity
+            android:name=".activities.LoginActivity"
+            android:theme="@android:style/Theme.DeviceDefault.NoActionBar.Fullscreen" >
+        </activity>
+        <activity
+            android:name=".activities.ShutdownActivity"
+            android:theme="@android:style/Theme.DeviceDefault.NoActionBar.Fullscreen" >
+        </activity>
+        <activity
             android:name=".activities.DataDisplayActivity"
             android:icon="@drawable/icon_3d"
             android:label="AdvancedHyperXPositiveSuperFluousApp"
-            android:theme="@android:style/Theme.Holo.NoActionBar" >
+            android:theme="@android:style/Theme.DeviceDefault" >
             <intent-filter>
                 <action android:name="com.simekadam.blindassistant.UPDATE_GPS_UI" />
                 <action android:name="com.simekadam.blindassistant.UPDATE_CONTEXT_UI" />
@@ -74,6 +82,13 @@
 
         <service android:name=".services.UpdaterService" >
         </service>
+        <receiver android:name=".receivers.AlarmReceiver" android:label="alarmReceiver" android:enabled="true">
+            
+            <intent-filter>
+       			<action android:name="start" />
+   			</intent-filter>
+        	
+        </receiver>
     </application>
 
 </manifest>

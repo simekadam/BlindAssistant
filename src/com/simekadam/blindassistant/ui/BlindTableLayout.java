@@ -36,7 +36,7 @@ public class BlindTableLayout extends LinearLayout implements OnTouchListener, O
 	    width = display.getWidth();
 	    height = display.getHeight();	    
 	    leftFactor = width/2;
-		topFactor = height/3;
+		topFactor = height / 10;
 		this.setOnTouchListener(this);
 		BlindButton.setOnHoverListener(new BlindButton.OnHoverListener() {
 			
@@ -45,6 +45,7 @@ public class BlindTableLayout extends LinearLayout implements OnTouchListener, O
 				int row = (int)Math.floor(index/2);
 				LinearLayout lin = (LinearLayout) getChildAt(row);
 				BlindButton btn = (BlindButton ) lin.getChildAt(index-row*2);
+				Log.d("ui", "hovered");
 				SpeechHelper.getInstance().say(btn.getSpeechLabel(), getContext(), SpeechHelper.UI_RESPONSE);
 			}
 		});
@@ -63,7 +64,7 @@ public class BlindTableLayout extends LinearLayout implements OnTouchListener, O
 	    width = display.getWidth();
 	    height = display.getHeight();	    
 	    leftFactor = width/2;
-		topFactor = height/3;
+		topFactor = height / 10;
 		this.setOnTouchListener(this);
 		this.setClickable(true);
 		this.setEnabled(true);
@@ -77,29 +78,22 @@ public class BlindTableLayout extends LinearLayout implements OnTouchListener, O
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
 		// TODO Auto-generated method stub
-	  	//super.onTouchEvent(event);
 		Log.v("touch", event.getAction()+" xxx "+MotionEvent.ACTION_UP);
-		if(event.getAction() == MotionEvent.ACTION_UP){
-			currentlyTouched = -1;
-			return false;
-		}
-		checkEdges(event.getRawX(), event.getRawY());
 		
-		return false;
+		checkEdges(event.getRawX(), event.getRawY());
+	  	super.onTouchEvent(event);
+
+		return true;
 	}
   
 	
   
   private void checkEdges(float x, float y){
-	  
-	  int touchedIndex = (int) (Math.floor(x/leftFactor) + (Math.floor( y / topFactor ) * 2));
-	  if(currentlyTouched == -1) currentlyTouched = touchedIndex;
-	  else if(currentlyTouched != touchedIndex){
-		  vibrator.vibrate(100);
-		  BlindButton btn = (BlindButton) this.getChildAt(touchedIndex);
-		  Log.v("test", btn+"test");
-		  SpeechHelper.getInstance().say(btn.getSpeechLabel(), getContext(), SpeechHelper.UI_RESPONSE);
-		  currentlyTouched = touchedIndex;
+	  Log.d("ui", x+" "+y);
+	  if (x < 10 || x > width - 10 || y < 10 || y > topFactor * 9) {
+			vibrator.vibrate(200);
+		} else {
+	 
 	  }
 	  
 	  

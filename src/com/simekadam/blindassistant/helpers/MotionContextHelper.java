@@ -112,9 +112,15 @@ public class MotionContextHelper implements SensorEventListener, ContextCountedL
 	}
 	
 	public void stopContextResolve(ContextAlertListener cal){
+		if(contextUpdatehandler != null){
+			
+		
 		contextUpdatehandler.removeMessages(COUNT_CONTEXT);
+		}
+		if(!FourierHelper.processing)
+		{
 		FourierHelper.removeOnContextCountedListener(this);
-
+		}
 		unregisterAccelerometerUpdates();
 		contextAlertListeners.remove(cal);
 
@@ -188,7 +194,7 @@ public class MotionContextHelper implements SensorEventListener, ContextCountedL
 	
 	
 	private void verifyContext(int context){
-		Log.d(TAG, "verifying context..current contextRank is: "+contextRank);
+		//Log.d(TAG, "verifying context..current contextRank is: "+contextRank);
 		if(contextRank == -10){
 			contextRank = 0;
 			lastMeasuredContext = context;
@@ -202,7 +208,7 @@ public class MotionContextHelper implements SensorEventListener, ContextCountedL
 			lastMeasuredContext = context;
 		}
 		//lastMeasuredContext = context;
-			if(contextRank > 2 || contextRank < -2){
+			if(contextRank > 1 || contextRank < -1){
 					lastVerifiedContext = context;
 				
 					lastVerifiedContext = context;
@@ -267,6 +273,15 @@ public class MotionContextHelper implements SensorEventListener, ContextCountedL
 		
 		Log.d(TAG, "context has been counted and now I should do something about it...woooo");
 
+	}
+
+	@Override
+	public void contextCounted(ArrayList<Float> outputData,
+			ArrayList<Float> inputData, int context, int intent, float freq,
+			float max) {
+		// TODO Auto-generated method stub
+		contextCounted(outputData, inputData, context, intent);
+		
 	}
 
 	
