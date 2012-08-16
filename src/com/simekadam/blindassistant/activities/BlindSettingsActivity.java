@@ -19,17 +19,18 @@ import android.widget.LinearLayout;
 public class BlindSettingsActivity extends Activity {
 
 	private SharedPreferences sp;
-
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.blindassistantmain);
+		if(!this.getIntent().hasExtra("reload")){
 		SpeechHelper
 				.getInstance()
-				.say("Jste v nastavení aplikace, můžete si vybrat co chcete nastavit.",
-						getApplicationContext(), SpeechHelper.STANDARD_MSG);
+				.say("Jste v nastavení aplikace",
+						getApplicationContext(), SpeechHelper.STANDARD_MSG);}
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		sp = getSharedPreferences("com.simekadam.blindassistant",
@@ -46,22 +47,34 @@ public class BlindSettingsActivity extends Activity {
 			@Override
 			public void onDoubleClick() {
 				// TODO Auto-generated method stub
-				onBackPressed();
+				finish();
 
 			}
 		});
 
 		BlindButton btn2 = (BlindButton) findViewById(R.id.secondButton);
-		btn2.setSpeechLabel("použít mobilní připojení pro odesílání dat? Aktuálně nastaveno na volbu ano");
+		//if(sp.getBoolean("data",true)){
+		btn2.setSpeechLabel("vypnout odesílání dat přes datové přenosy. používat pouze wi-fi");
+		
 		btn2.setActionSpeechLabel("Vypínám odesílání dat přes mobilní připojeni, bude používáno pouze Wi-Fi");
-
+		//}else{
+			//btn2.setSpeechLabel("použít mobilní připojení pro odesílání dat v reálném čase? ");
+			
+			//btn2.setActionSpeechLabel("Zapínám odesílání dat přes mobilní připojeni, bude používáno pouze Wi-Fi");
+		//}
 		btn2.setText("Data/Wi-Fi");
 		btn2.setOnDoubleClickListener(new OnDoubleClickListener() {
 
 			@Override
 			public void onDoubleClick() {
 				// TODO Auto-generated method stub
-
+//				if(sp.getBoolean("data",true)){
+//					sp.edit().putBoolean("data", false).commit();
+//					
+//				}
+//				else{
+//					sp.edit().putBoolean("data", true).commit();
+//				}
 				SpeechHelper.getInstance().say(
 						"nastavení pro odesílání dat bylo uloženo",
 						getApplicationContext(), SpeechHelper.STANDARD_MSG);
@@ -110,4 +123,16 @@ public class BlindSettingsActivity extends Activity {
 		});
 
 	}
+	  public void reload() {
+
+		    Intent intent = new Intent(getApplicationContext(), BlindSettingsActivity.class);
+		    intent.putExtra("reload", "true");
+		    overridePendingTransition(0, 0);
+		    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		    finish();
+
+		    overridePendingTransition(0, 0);
+		    startActivity(intent);
+		}
+	
 }

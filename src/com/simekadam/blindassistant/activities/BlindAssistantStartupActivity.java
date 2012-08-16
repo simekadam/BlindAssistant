@@ -7,17 +7,27 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
 
 import com.simekadam.blindassistant.helpers.SpeechHelper;
 import com.simekadam.blindassistant.helpers.SpeechHelper.OnSpeechEndedListener;
 
-public class BlindAssistantStartupActivity extends Activity {
+/**
+ * @author simekadam
+ *
+ */
+public class BlindAssistantStartupActivity extends Activity implements OnClickListener{
 
 	private static final int MY_DATA_CHECK_CODE = 55;
 	public static final String TAG = BlindAssistantStartupActivity.class
 			.getSimpleName();
-
+	
+	
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		checkAuthentication();
@@ -30,7 +40,10 @@ public class BlindAssistantStartupActivity extends Activity {
 		super.onCreate(savedInstanceState);
 
 	}
-
+	
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
+	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
@@ -50,7 +63,7 @@ public class BlindAssistantStartupActivity extends Activity {
 									.removeOnSpeechEndedListener();
 						}
 					});
-			 SpeechHelper.getInstance().say("Vítejte v testovací verzi aplikace pro sledování polohy. Já jsem Iveta a budu Vás aplikací provázet. ",
+			 SpeechHelper.getInstance().say("Vítejte v aplikaci pro sledování polohy.",
 			 this.getApplicationContext(),
 			 SpeechHelper.UI_RESPONSE_WITH_CALLBACK);
 
@@ -67,6 +80,9 @@ public class BlindAssistantStartupActivity extends Activity {
 		}
 	}
 
+	/**
+	 * @return 
+	 */
 	private boolean checkAuthentication() {
 		SharedPreferences sp = getSharedPreferences(
 				"com.simekadam.blindassistant", Context.MODE_PRIVATE);
@@ -88,6 +104,12 @@ public class BlindAssistantStartupActivity extends Activity {
 
 			
 		}
+	}
+
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		SpeechHelper.getInstance().stopTTS();
 	}
 
 	

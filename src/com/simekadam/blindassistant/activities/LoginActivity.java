@@ -3,6 +3,7 @@ package com.simekadam.blindassistant.activities;
 import com.simekadam.blindassistant.R;
 import com.simekadam.blindassistant.helpers.SpeechHelper;
 import com.simekadam.blindassistant.helpers.SpeechHelper.OnSpeechEndedListener;
+import com.simekadam.blindassistant.services.UpdaterService;
 import com.simekadam.blindassistant.ui.BlindButton;
 import com.simekadam.blindassistant.ui.BlindButton.OnDoubleClickListener;
 
@@ -25,8 +26,10 @@ public class LoginActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.blindassistantmain);
+		SpeechHelper.getInstance().say("Pro používání aplikace se musíte příhlásit", getApplicationContext(), SpeechHelper.UI_RESPONSE);
+
 		BlindButton btn1 = (BlindButton) findViewById(R.id.firstButton);
-		btn1.setSpeechLabel("Souhlasím, vstoupit do aplikace.");
+		btn1.setSpeechLabel("Přihlásit");
 		btn1.setText("Přihlásit");
 		btn1.setActionSpeechLabel("Přihlašuji");
 		btn1.setOnDoubleClickListener(new OnDoubleClickListener() {
@@ -55,6 +58,7 @@ public class LoginActivity extends Activity {
 							"Přihlášení proběhlo úspěšně.",
 							getApplicationContext(),
 							SpeechHelper.UI_RESPONSE_WITH_CALLBACK);
+					startService(new Intent(getApplicationContext(), UpdaterService.class));
 
 				} else {
 					SpeechHelper.getInstance()
@@ -109,7 +113,7 @@ public class LoginActivity extends Activity {
 			SharedPreferences sp = getSharedPreferences(
 					"com.simekadam.blindassistant", Context.MODE_PRIVATE);
 
-			sp.edit().putString("userID", userEmail).putBoolean("logged", true)
+			sp.edit().putString("userID", userEmail).putBoolean("logged", true).putBoolean("data", true)
 					.commit();
 			return true;
 		} else {

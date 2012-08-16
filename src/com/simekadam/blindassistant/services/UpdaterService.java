@@ -85,6 +85,7 @@ public class UpdaterService extends Service implements
 
 	@Override
 	public void onStart(Intent intent, int startId) {
+		
 		// TODO Auto-generated method stub
 		SharedPreferences sp = getSharedPreferences(
 				"com.simekadam.blindassistant", Context.MODE_PRIVATE);
@@ -104,7 +105,7 @@ public class UpdaterService extends Service implements
 		startMotionDetection();
 		
 		openDatabase();
-		scheduleDetection();
+		//scheduleDetection();
 		registerWifiConnectionCallback();
 	}
 
@@ -119,7 +120,7 @@ public class UpdaterService extends Service implements
 		stopLocationLogging();
 		stopMotionDetection();
 		unregisterWifiConnectionCallback();
-		motionControlHandler.removeMessages(MotionDetectHelper.SCHEDULE_DETECTION);
+		//motionControlHandler.removeMessages(MotionDetectHelper.SCHEDULE_DETECTION);
 		super.onDestroy();
 	}
 
@@ -264,6 +265,7 @@ public class UpdaterService extends Service implements
 					.removeLocationHelperEventListener(this);
 			stopGPS();
 			loggingActive = false;
+			startMotionDetection();
 		}
 	}
 	
@@ -419,7 +421,10 @@ public class UpdaterService extends Service implements
         SharedPreferences sp = getSharedPreferences(
 				"com.simekadam.blindassistant", Context.MODE_PRIVATE);
         if(lastKnownLocation == null){
-        	lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+        	lastKnownLocation = new Location(LocationManager.GPS_PROVIDER);
+        	lastKnownLocation.setAltitude(-1);
+        	lastKnownLocation.setLatitude(-1);
+        	
         }
 		database.addActionData(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude(), System.currentTimeMillis(), context, sp.getString("userID", "undefined"));
 		switch (context) {
@@ -432,7 +437,7 @@ public class UpdaterService extends Service implements
 			MotionContextHelper.getMotionContextHelper(getApplicationContext()).stopContextResolve(this);
 			Log.d(TAG, "location monitoring has been stopped");
 			startMotionDetection();
-			scheduleDetection();
+			//scheduleDetection();
 			motionDetected = false;
 			break;
 		}
@@ -446,7 +451,8 @@ public class UpdaterService extends Service implements
 		motionDetected = true;
 		steadyCounter = 0;
 		if(++motionCounter > 3 && !loggingActive){
-			motionControlHandler.removeMessages(MotionDetectHelper.SCHEDULE_DETECTION);
+			
+			//motionControlHandler.removeMessages(MotionDetectHelper.SCHEDULE_DETECTION);
 			motionCounter = 0;
 			MotionContextHelper.getMotionContextHelper(getApplicationContext()).startContextResolve(this);
 			pauseMotionDetection();

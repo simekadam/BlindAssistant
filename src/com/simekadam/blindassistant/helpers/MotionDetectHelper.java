@@ -103,7 +103,7 @@ public class MotionDetectHelper implements SensorEventListener{
 	private void motionAssertion(float vector){
 		if(vector > 4){
 			//stopMotionDetection();
-		//	Log.d(TAG, "motion detected "+vector);
+			Log.d(TAG, "motion detected "+vector);
 			Iterator<MotionDetectListener> iterator = motionDetectListeners.iterator();
 			while(iterator.hasNext()){
 				iterator.next().MotionDetected();
@@ -111,7 +111,7 @@ public class MotionDetectHelper implements SensorEventListener{
 			
 		}else if(vector < 0.4){
 			//stopMotionDetection();
-		//	Log.d(TAG, "steady detected "+vector);
+			Log.d(TAG, "steady detected "+vector);
 			Iterator<MotionDetectListener> iterator = motionDetectListeners.iterator();
 			while(iterator.hasNext()){
 				iterator.next().SteadyDetected();

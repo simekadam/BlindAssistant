@@ -85,14 +85,14 @@ public class BlindButton extends Button implements OnClickListener,
 		height = display.getHeight();
 		leftFactor = width / 2;
 		Point point = new Point();
-		display.getSize(point);
+		display.getSize(point	);
 		topFactor = point.y/10*3;
 
 	}
 
 	private static void checkEdges(float x, float y) {
-		if (x < 10 || x > width - 10 || y < 10 || y > topFactor * 3) {
-			vibrator.vibrate(200);
+		if (x < 20 || x > width - 20 || y < 20 || y > topFactor * 3) {
+			vibrator.vibrate(100);
 		} else {
 			int touchedIndex = (int) (Math.floor(x / leftFactor) + (Math
 					.floor(y / topFactor) * 2));
@@ -217,7 +217,7 @@ public class BlindButton extends Button implements OnClickListener,
 		BlindButton clicked = (BlindButton) v;
 		
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-			vibrator.vibrate(20);
+			vibrator.vibrate(50);
 
 			if (prevClicked == null || !prevClicked.equals(clicked)) {
 				

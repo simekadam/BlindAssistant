@@ -89,6 +89,7 @@ public class MotionContextHelper implements SensorEventListener, ContextCountedL
             	Bundle dataBundle = new Bundle();
         		float vectors[] = new float[list.size()];
         		int i = 0;
+        		
         		Iterator<Float> inputConverter = list.iterator();
         		
         		while(inputConverter.hasNext()){
@@ -99,15 +100,12 @@ public class MotionContextHelper implements SensorEventListener, ContextCountedL
         		dataBundle.putFloatArray("vectors", vectors);
         		msg.setData(dataBundle);
                 FourierHelper.processFourierData(msg);
-                //stopContextResolve();
 
             }
         };
 		Message msg = Message.obtain();
-		msg.arg1 = COUNT_CONTEXT_FOREGROUND;
-		
-		contextUpdatehandler.sendMessageDelayed(msg, 4000);
-		
+		msg.arg1 = COUNT_CONTEXT_FOREGROUND;	
+		contextUpdatehandler.sendMessageDelayed(msg, 4000);	
 		
 	}
 	
