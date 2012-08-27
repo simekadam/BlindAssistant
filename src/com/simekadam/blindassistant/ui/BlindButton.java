@@ -66,8 +66,8 @@ public class BlindButton extends Button implements OnClickListener,
 		height = display.getHeight();
 		leftFactor = width / 2;
 		Point point = new Point();
-		display.getSize(point);
-		topFactor = point.y/10*3;
+		int height = display.getHeight();
+		topFactor = height/10*3;
 
 	}
 
@@ -85,8 +85,8 @@ public class BlindButton extends Button implements OnClickListener,
 		height = display.getHeight();
 		leftFactor = width / 2;
 		Point point = new Point();
-		display.getSize(point	);
-		topFactor = point.y/10*3;
+		int height = display.getHeight();
+		topFactor = height/10*3;
 
 	}
 
@@ -119,8 +119,8 @@ public class BlindButton extends Button implements OnClickListener,
 		height = display.getHeight();
 		leftFactor = width / 2;
 		Point point = new Point();
-		display.getSize(point);
-		topFactor = point.y/10*3;
+		int height = display.getHeight();
+		topFactor = height/10*3;
 
 	}
 
