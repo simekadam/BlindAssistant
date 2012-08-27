@@ -1,0 +1,141 @@
+<class-diagram version="1.0.7" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+  associations="true" dependencies="false" nesting-relationships="true">  
+  <class id="1" corner="BOTTOM_RIGHT" language="java" name="com.simekadam.blindassistant.helpers.MotionDetectHelper" 
+    project="BlindAssistant" file="/BlindAssistant/src/com/simekadam/blindassistant/helpers/MotionDetectHelper.java" 
+    binary="false">    
+    <position height="-1" width="-1" x="957" y="472"/>    
+    <display autosize="true" package="false" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="2" corner="BOTTOM_RIGHT" language="java" name="com.simekadam.blindassistant.services.UpdaterService" 
+    project="BlindAssistant" file="/BlindAssistant/src/com/simekadam/blindassistant/services/UpdaterService.java" 
+    binary="false">    
+    <position height="-1" width="-1" x="1288" y="186"/>    
+    <display autosize="true" package="false" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="3" corner="BOTTOM_RIGHT" language="java" 
+    name="com.simekadam.blindassistant.services.UpdaterService.ResponseHandler" project="BlindAssistant" 
+    file="/BlindAssistant/src/com/simekadam/blindassistant/services/UpdaterService.java" binary="false">    
+    <position height="-1" width="-1" x="1113" y="338"/>    
+    <display autosize="true" package="false" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <interface id="4" corner="BOTTOM_RIGHT" language="java" 
+    name="com.simekadam.blindassistant.interfaces.LocationHelperEventsListener" project="BlindAssistant" 
+    file="/BlindAssistant/src/com/simekadam/blindassistant/interfaces/LocationHelperEventsListener.java" binary="false">    
+    <position height="-1" width="-1" x="1230" y="408"/>    
+    <display autosize="true" package="false" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </interface>  
+  <class id="5" corner="BOTTOM_RIGHT" language="java" name="com.simekadam.blindassistant.helpers.MotionContextHelper" 
+    project="BlindAssistant" file="/BlindAssistant/src/com/simekadam/blindassistant/helpers/MotionContextHelper.java" 
+    binary="false">    
+    <position height="-1" width="-1" x="1416" y="473"/>    
+    <display autosize="true" package="false" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <interface id="6" corner="BOTTOM_RIGHT" language="java" 
+    name="com.simekadam.blindassistant.interfaces.ContextCountedListener" project="BlindAssistant" 
+    file="/BlindAssistant/src/com/simekadam/blindassistant/interfaces/ContextCountedListener.java" binary="false">    
+    <position height="-1" width="-1" x="1642" y="324"/>    
+    <display autosize="true" package="false" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </interface>  
+  <interface id="7" corner="BOTTOM_RIGHT" language="java" 
+    name="com.simekadam.blindassistant.interfaces.MotionDetectListener" project="BlindAssistant" 
+    file="/BlindAssistant/src/com/simekadam/blindassistant/interfaces/MotionDetectListener.java" binary="false">    
+    <position height="-1" width="-1" x="956" y="268"/>    
+    <display autosize="true" package="false" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </interface>  
+  <interface id="8" corner="BOTTOM_RIGHT" language="java" 
+    name="com.simekadam.blindassistant.interfaces.ContextAlertListener" project="BlindAssistant" 
+    file="/BlindAssistant/src/com/simekadam/blindassistant/interfaces/ContextAlertListener.java" binary="false">    
+    <position height="-1" width="-1" x="1413" y="326"/>    
+    <display autosize="true" package="false" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </interface>  
+  <class id="9" corner="BOTTOM_RIGHT" language="java" name="com.simekadam.blindassistant.helpers.FourierHelper" 
+    project="BlindAssistant" file="/BlindAssistant/src/com/simekadam/blindassistant/helpers/FourierHelper.java" 
+    binary="false">    
+    <position height="-1" width="-1" x="1643" y="475"/>    
+    <display autosize="true" package="false" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <association id="10">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="11" name="motionDetectListeners"/>      
+      <multiplicity id="12" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="7" navigable="true"/>    
+    <display labels="false" multiplicity="false"/>  
+  </association>  
+  <nesting id="13">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="3"/>  
+  </nesting>  
+  <realization id="14">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="8"/>  
+  </realization>  
+  <association id="15">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="16" name="contextCountedListener"/>      
+      <multiplicity id="17" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
+    <display labels="false" multiplicity="false"/>  
+  </association>  
+  <realization id="18">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="7"/>  
+  </realization>  
+  <realization id="19">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="4"/>  
+  </realization>  
+  <realization id="20">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="6"/>  
+  </realization>  
+  <association id="21">    
+    <end type="SOURCE" refId="9" navigable="false">      
+      <attribute id="22" name="ccListeners"/>      
+      <multiplicity id="23" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
+    <display labels="false" multiplicity="false"/>  
+  </association>  
+  <association id="24">    
+    <end type="SOURCE" refId="5" navigable="false">      
+      <attribute id="25" name="contextAlertListeners"/>      
+      <multiplicity id="26" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="8" navigable="true"/>    
+    <display labels="false" multiplicity="false"/>  
+  </association>  
+  <classifier-display autosize="true" package="true" initial-value="false" signature="true" visibility="true">    
+    <attributes public="false" package="false" protected="false" private="false"/>    
+    <operations public="false" package="false" protected="false" private="false"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="false"/>
+</class-diagram>

@@ -1,0 +1,489 @@
+<class-diagram version="1.0.7" icons="true" automaticImage="PNG" always-add-relationships="false" generalizations="true" 
+  realizations="true" associations="true" dependencies="false" nesting-relationships="true">  
+  <interface id="1" corner="BOTTOM_RIGHT" language="java" 
+    name="com.simekadam.blindassistant.helpers.SpeechHelper.OnSpeechEndedListener" project="BlindAssistant" 
+    file="/BlindAssistant/src/com/simekadam/blindassistant/helpers/SpeechHelper.java" binary="false">    
+    <position height="66" width="194" x="1992" y="781"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </interface>  
+  <class id="2" corner="BOTTOM_RIGHT" language="java" name="com.simekadam.blindassistant.ui.BlindButton" 
+    project="BlindAssistant" file="/BlindAssistant/src/com/simekadam/blindassistant/ui/BlindButton.java" binary="false">    
+    <position height="530" width="327" x="4722" y="-237"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="3" corner="BOTTOM_RIGHT" language="java" name="com.simekadam.blindassistant.helpers.SpeechHelper" 
+    project="BlindAssistant" file="/BlindAssistant/src/com/simekadam/blindassistant/helpers/SpeechHelper.java" 
+    binary="false">    
+    <position height="290" width="349" x="1992" y="-237"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <package id="4" language="java" name="com.simekadam.blindassistant.ui" project="BlindAssistant" 
+    file="/BlindAssistant/src/com/simekadam/blindassistant/ui" binary="false">    
+    <position height="44" width="252" x="276" y="-237"/>  
+  </package>  
+  <interface id="5" corner="BOTTOM_RIGHT" language="java" 
+    name="com.simekadam.blindassistant.interfaces.ContextCountedListener" project="BlindAssistant" 
+    file="/BlindAssistant/src/com/simekadam/blindassistant/interfaces/ContextCountedListener.java" binary="false">    
+    <position height="98" width="408" x="6709" y="781"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </interface>  
+  <class id="6" corner="BOTTOM_RIGHT" language="java" 
+    name="com.simekadam.blindassistant.activities.BlindSearchResultActivity" project="BlindAssistant" 
+    file="/BlindAssistant/src/com/simekadam/blindassistant/activities/BlindSearchResultActivity.java" binary="false">    
+    <position height="242" width="202" x="5099" y="-237"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <interface id="7" corner="BOTTOM_RIGHT" language="java" 
+    name="com.simekadam.blindassistant.ui.BlindButton.OnHoverListener" project="BlindAssistant" 
+    file="/BlindAssistant/src/com/simekadam/blindassistant/ui/BlindButton.java" binary="false">    
+    <position height="66" width="158" x="4870" y="781"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </interface>  
+  <interface id="8" corner="BOTTOM_RIGHT" language="java" 
+    name="com.simekadam.blindassistant.ui.BlindButton.OnDoubleClickListener" project="BlindAssistant" 
+    file="/BlindAssistant/src/com/simekadam/blindassistant/ui/BlindButton.java" binary="false">    
+    <position height="66" width="182" x="4648" y="781"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </interface>  
+  <class id="9" corner="BOTTOM_RIGHT" language="java" 
+    name="com.simekadam.blindassistant.activities.BlindSearchResultActivity.PhoneCallListener" project="BlindAssistant" 
+    file="/BlindAssistant/src/com/simekadam/blindassistant/activities/BlindSearchResultActivity.java" binary="false">    
+    <position height="114" width="220" x="5068" y="781"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="10" corner="BOTTOM_RIGHT" language="java" 
+    name="com.simekadam.blindassistant.services.UpdaterService.ResponseHandler" project="BlindAssistant" 
+    file="/BlindAssistant/src/com/simekadam/blindassistant/services/UpdaterService.java" binary="false">    
+    <position height="66" width="187" x="5946" y="781"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <package id="11" language="java" name="com.simekadam.blindassistant.services" project="BlindAssistant" 
+    file="/BlindAssistant/src/com/simekadam/blindassistant/services" binary="false">    
+    <position height="44" width="296" x="568" y="-237"/>  
+  </package>  
+  <class id="12" corner="BOTTOM_RIGHT" language="java" name="com.simekadam.blindassistant.activities.InitActivity" 
+    project="BlindAssistant" file="/BlindAssistant/src/com/simekadam/blindassistant/activities/InitActivity.java" 
+    binary="false">    
+    <position height="130" width="206" x="904" y="-237"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="13" corner="BOTTOM_RIGHT" language="java" 
+    name="com.simekadam.blindassistant.activities.DataDisplayActivity" project="BlindAssistant" 
+    file="/BlindAssistant/src/com/simekadam/blindassistant/activities/DataDisplayActivity.java" binary="false">    
+    <position height="402" width="408" x="7011" y="-237"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="14" corner="BOTTOM_RIGHT" language="java" 
+    name="com.simekadam.blindassistant.activities.BlindAssistantStartupActivity" project="BlindAssistant" 
+    file="/BlindAssistant/src/com/simekadam/blindassistant/activities/BlindAssistantStartupActivity.java" binary="false">    
+    <position height="178" width="226" x="1150" y="-237"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="15" corner="BOTTOM_RIGHT" language="java" name="com.simekadam.blindassistant.helpers.LocationHelper" 
+    project="BlindAssistant" file="/BlindAssistant/src/com/simekadam/blindassistant/helpers/LocationHelper.java" 
+    binary="false">    
+    <position height="354" width="422" x="5341" y="-237"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="16" corner="BOTTOM_RIGHT" language="java" name="com.simekadam.blindassistant.services.UpdaterService" 
+    project="BlindAssistant" file="/BlindAssistant/src/com/simekadam/blindassistant/services/UpdaterService.java" 
+    binary="false">    
+    <position height="978" width="320" x="5813" y="-237"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <interface id="17" corner="BOTTOM_RIGHT" language="java" 
+    name="com.simekadam.blindassistant.ui.BlindTableLayout.OnDoubleClickListener" project="BlindAssistant" 
+    file="/BlindAssistant/src/com/simekadam/blindassistant/ui/BlindTableLayout.java" binary="false">    
+    <position height="66" width="182" x="7879" y="781"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </interface>  
+  <class id="18" corner="BOTTOM_RIGHT" language="java" name="com.simekadam.blindassistant.helpers.MotionContextHelper" 
+    project="BlindAssistant" file="/BlindAssistant/src/com/simekadam/blindassistant/helpers/MotionContextHelper.java" 
+    binary="false">    
+    <position height="514" width="408" x="6553" y="-237"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <package id="19" language="java" name="com.simekadam.blindassistant.interfaces" project="BlindAssistant" 
+    file="/BlindAssistant/src/com/simekadam/blindassistant/interfaces" binary="false">    
+    <position height="44" width="307" x="1416" y="-237"/>  
+  </package>  
+  <class id="20" corner="BOTTOM_RIGHT" language="java" name="com.simekadam.blindassistant.activities.LoginActivity" 
+    project="BlindAssistant" file="/BlindAssistant/src/com/simekadam/blindassistant/activities/LoginActivity.java" 
+    binary="false">    
+    <position height="146" width="189" x="1763" y="-237"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="21" corner="BOTTOM_RIGHT" language="java" name="com.simekadam.blindassistant.receivers.AlarmReceiver" 
+    project="BlindAssistant" file="/BlindAssistant/src/com/simekadam/blindassistant/receivers/AlarmReceiver.java" 
+    binary="false">    
+    <position height="82" width="191" x="2391" y="-237"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <package id="22" language="java" name="com.simekadam.blindassistant.receivers" project="BlindAssistant" 
+    file="/BlindAssistant/src/com/simekadam/blindassistant/receivers" binary="false">    
+    <position height="44" width="301" x="2622" y="-237"/>  
+  </package>  
+  <package id="23" language="java" name="com.simekadam.blindassistant.activities" project="BlindAssistant" 
+    file="/BlindAssistant/src/com/simekadam/blindassistant/activities" binary="false">    
+    <position height="44" width="301" x="2963" y="-237"/>  
+  </package>  
+  <interface id="24" corner="BOTTOM_RIGHT" language="java" 
+    name="com.simekadam.blindassistant.interfaces.ContextAlertListener" project="BlindAssistant" 
+    file="/BlindAssistant/src/com/simekadam/blindassistant/interfaces/ContextAlertListener.java" binary="false">    
+    <position height="66" width="195" x="6408" y="781"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </interface>  
+  <class id="25" corner="BOTTOM_RIGHT" language="java" name="com.simekadam.blindassistant.ui.BlindTableLayout" 
+    project="BlindAssistant" file="/BlindAssistant/src/com/simekadam/blindassistant/ui/BlindTableLayout.java" 
+    binary="false">    
+    <position height="290" width="327" x="7879" y="-237"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="26" corner="BOTTOM_RIGHT" language="java" name="com.simekadam.blindassistant.activities.ShutdownActivity" 
+    project="BlindAssistant" file="/BlindAssistant/src/com/simekadam/blindassistant/activities/ShutdownActivity.java" 
+    binary="false">    
+    <position height="82" width="189" x="3304" y="-237"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="27" corner="BOTTOM_RIGHT" language="java" 
+    name="com.simekadam.blindassistant.activities.BlindAssistantActivity" project="BlindAssistant" 
+    file="/BlindAssistant/src/com/simekadam/blindassistant/activities/BlindAssistantActivity.java" binary="false">    
+    <position height="98" width="189" x="3533" y="-237"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="28" corner="BOTTOM_RIGHT" language="java" 
+    name="com.simekadam.blindassistant.helpers.DatabaseAdapter.SqlLiteHelper" project="BlindAssistant" 
+    file="/BlindAssistant/src/com/simekadam/blindassistant/helpers/DatabaseAdapter.java" binary="false">    
+    <position height="194" width="271" x="5328" y="1287"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="29" corner="BOTTOM_RIGHT" language="java" name="com.simekadam.blindassistant.helpers.MotionDetectHelper" 
+    project="BlindAssistant" file="/BlindAssistant/src/com/simekadam/blindassistant/helpers/MotionDetectHelper.java" 
+    binary="false">    
+    <position height="290" width="330" x="6173" y="-237"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="30" corner="BOTTOM_RIGHT" language="java" name="com.simekadam.blindassistant.helpers.ServerClient" 
+    project="BlindAssistant" file="/BlindAssistant/src/com/simekadam/blindassistant/helpers/ServerClient.java" 
+    binary="false">    
+    <position height="146" width="361" x="3762" y="-237"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <package id="31" language="java" name="com.simekadam.blindassistant.helpers" project="BlindAssistant" 
+    file="/BlindAssistant/src/com/simekadam/blindassistant/helpers" binary="false">    
+    <position height="44" width="290" x="4392" y="-237"/>  
+  </package>  
+  <class id="32" corner="BOTTOM_RIGHT" language="java" 
+    name="com.simekadam.blindassistant.activities.BlindSettingsActivity" project="BlindAssistant" 
+    file="/BlindAssistant/src/com/simekadam/blindassistant/activities/BlindSettingsActivity.java" binary="false">    
+    <position height="114" width="189" x="4163" y="-237"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <interface id="33" corner="BOTTOM_RIGHT" language="java" 
+    name="com.simekadam.blindassistant.interfaces.LocationHelperEventsListener" project="BlindAssistant" 
+    file="/BlindAssistant/src/com/simekadam/blindassistant/interfaces/LocationHelperEventsListener.java" binary="false">    
+    <position height="66" width="231" x="5675" y="781"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </interface>  
+  <class id="34" corner="BOTTOM_RIGHT" language="java" name="com.simekadam.blindassistant.helpers.DatabaseAdapter" 
+    project="BlindAssistant" file="/BlindAssistant/src/com/simekadam/blindassistant/helpers/DatabaseAdapter.java" 
+    binary="false">    
+    <position height="466" width="307" x="5328" y="781"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <interface id="35" corner="BOTTOM_RIGHT" language="java" 
+    name="com.simekadam.blindassistant.interfaces.MotionDetectListener" project="BlindAssistant" 
+    file="/BlindAssistant/src/com/simekadam/blindassistant/interfaces/MotionDetectListener.java" binary="false">    
+    <position height="82" width="195" x="6173" y="781"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </interface>  
+  <class id="36" corner="BOTTOM_RIGHT" language="java" name="com.simekadam.blindassistant.helpers.FourierHelper" 
+    project="BlindAssistant" file="/BlindAssistant/src/com/simekadam/blindassistant/helpers/FourierHelper.java" 
+    binary="false">    
+    <position height="322" width="380" x="7459" y="-237"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <nesting id="37">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="9"/>  
+  </nesting>  
+  <association id="38">    
+    <end type="SOURCE" refId="34" navigable="false">      
+      <attribute id="39" name="dbHelper"/>      
+      <multiplicity id="40" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="28" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="41">    
+    <end type="SOURCE" refId="16"/>    
+    <end type="TARGET" refId="33"/>  
+  </realization>  
+  <association id="42">    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="43" name="onSpeechEndedListener"/>      
+      <multiplicity id="44" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="45">    
+    <end type="SOURCE" refId="18" navigable="false">      
+      <attribute id="46" name="instance"/>      
+      <multiplicity id="47" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="18" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="48">    
+    <end type="SOURCE" refId="36" navigable="false">      
+      <attribute id="49" name="ccListeners"/>      
+      <multiplicity id="50" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="5" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="51">    
+    <end type="SOURCE" refId="16"/>    
+    <end type="TARGET" refId="35"/>  
+  </realization>  
+  <association id="52">    
+    <end type="SOURCE" refId="15" navigable="false">      
+      <attribute id="53" name="instance"/>      
+      <multiplicity id="54" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="15" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="55">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="7"/>  
+  </nesting>  
+  <nesting id="56">    
+    <end type="SOURCE" refId="34"/>    
+    <end type="TARGET" refId="28"/>  
+  </nesting>  
+  <nesting id="57">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="1"/>  
+  </nesting>  
+  <realization id="58">    
+    <end type="SOURCE" refId="16"/>    
+    <end type="TARGET" refId="24"/>  
+  </realization>  
+  <association id="59">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="60" name="prevClicked"/>      
+      <multiplicity id="61" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="2" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="62">    
+    <end type="SOURCE" refId="18" navigable="false">      
+      <attribute id="63" name="contextAlertListeners"/>      
+      <multiplicity id="64" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="24" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="65">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="66" name="onHoverListener"/>      
+      <multiplicity id="67" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="7" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="68">    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="69" name="database"/>      
+      <multiplicity id="70" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="34" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="71">    
+    <end type="SOURCE" refId="16"/>    
+    <end type="TARGET" refId="10"/>  
+  </nesting>  
+  <realization id="72">    
+    <end type="SOURCE" refId="18"/>    
+    <end type="TARGET" refId="5"/>  
+  </realization>  
+  <association id="73">    
+    <end type="SOURCE" refId="29" navigable="false">      
+      <attribute id="74" name="motionDetectListeners"/>      
+      <multiplicity id="75" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="35" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="76">    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="77" name="contextCountedListener"/>      
+      <multiplicity id="78" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="5" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="79">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="80" name="database"/>      
+      <multiplicity id="81" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="34" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="82">    
+    <end type="SOURCE" refId="29" navigable="false">      
+      <attribute id="83" name="instance"/>      
+      <multiplicity id="84" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="29" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="85">    
+    <end type="SOURCE" refId="25"/>    
+    <end type="TARGET" refId="7"/>  
+  </realization>  
+  <association id="86">    
+    <end type="SOURCE" refId="15" navigable="false">      
+      <attribute id="87" name="locationHelperEventListeners"/>      
+      <multiplicity id="88" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="33" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="89">    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="90" name="helper"/>      
+      <multiplicity id="91" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="92">    
+    <end type="SOURCE" refId="25"/>    
+    <end type="TARGET" refId="17"/>  
+  </nesting>  
+  <nesting id="93">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="8"/>  
+  </nesting>  
+  <association id="94">    
+    <end type="SOURCE" refId="25" navigable="false">      
+      <attribute id="95" name="onDoubleClickListener"/>      
+      <multiplicity id="96" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="17" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="97">    
+    <end type="SOURCE" refId="13"/>    
+    <end type="TARGET" refId="5"/>  
+  </realization>  
+  <association id="98">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="99" name="onDoubleClickListener"/>      
+      <multiplicity id="100" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="17" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <classifier-display autosize="true" package="true" initial-value="false" signature="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true"/>    
+    <operations public="true" package="true" protected="true" private="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>
